@@ -23,59 +23,110 @@ import {
 import { CameraAlt, Close, Add } from "@mui/icons-material";
 import VideocamIcon from '@mui/icons-material/Videocam';
 
-/*
-  Place in src/pages/admin/TrafficSignals.jsx
-  Requires: /public/Delhi.png (map image)
-  - This component is self-contained and uses local component state to add signals.
-  - Replace mock image links with real camera snapshots when available.
-*/
 
 const initialSignals = [
   {
     id: "S-001",
-    name: "Rithala Intersection",
+    name: "Signal 1",
     top: "8%",
     left: "28%",
     status: "red",
-    stats: { red: 45, yellow: 12, green: 23, vehicles: 120 },
-    image: "https://via.placeholder.com/800x450?text=Signal+1+Snapshot",
+    stats: { red: 0.0, yellow: 0, green: 12, vehicles: 4 },
+    image: "/traffic/Photo1.jpg",
     updated: "2 mins ago",
     cameraIP: "192.168.10.11",
   },
   {
     id: "S-002",
-    name: "Model Town Junction",
+    name: "Signal 2",
     top: "18%",
     left: "62%",
     status: "green",
-    stats: { red: 10, yellow: 5, green: 65, vehicles: 80 },
-    image: "https://via.placeholder.com/800x450?text=Signal+2+Snapshot",
+    stats: { red: 6.0, yellow: 0, green: 42, vehicles: 14 },
+    image: "/traffic/Photo2.jpg",
     updated: "1 min ago",
     cameraIP: "192.168.10.12",
   },
   {
     id: "S-003",
-    name: "Connaught Place Entry",
+    name: "Signal 3",
     top: "46%",
     left: "50%",
     status: "yellow",
-    stats: { red: 20, yellow: 30, green: 10, vehicles: 210 },
-    image: "https://via.placeholder.com/800x450?text=Signal+3+Snapshot",
+    stats: { red: 21, yellow: 0, green: 21, vehicles: 7 },
+    image: "/traffic/photo3.jpg",
     updated: "20 sec ago",
     cameraIP: "192.168.10.13",
   },
   {
     id: "S-004",
-    name: "Saket Bypass Signal",
+    name: "Signal 4",
     top: "66%",
     left: "34%",
     status: "red",
-    stats: { red: 55, yellow: 8, green: 6, vehicles: 160 },
-    image: "https://via.placeholder.com/800x450?text=Signal+4+Snapshot",
+    stats: { red: 10.5, yellow: 0, green: 51, vehicles: 17 },
+    image: "/traffic/photo4.jpg",
     updated: "30 sec ago",
     cameraIP: "192.168.10.14",
   },
+  {
+    id: "S-005",
+    name: "Signal 5",
+    top: "20%",
+    left: "45%",
+    status: "green",
+    stats: { red: 25.5, yellow: 0, green: 51, vehicles: 17 },
+    image: "/traffic/photo5.jpg",
+    updated: "1 min ago",
+    cameraIP: "192.168.10.15",
+  },
+  {
+    id: "S-006",
+    name: "Signal 6",
+    top: "38%",
+    left: "65%",
+    status: "yellow",
+    stats: { red: 25.5, yellow: 0, green: 54, vehicles: 18 },
+    image: "/traffic/photo6.jpg",
+    updated: "45 sec ago",
+    cameraIP: "192.168.10.16",
+  },
+  {
+    id: "S-007",
+    name: "Signal 7",
+    top: "55%",
+    left: "40%",
+    status: "red",
+    stats: { red: 27.0, yellow: 0, green: 36, vehicles: 12 },
+    image: "/traffic/photo7.jpg",
+    updated: "3 mins ago",
+    cameraIP: "192.168.10.17",
+  },
+  {
+    id: "S-008",
+    name: "Signal 8",
+    top: "70%",
+    left: "55%",
+    status: "green",
+    stats: { red: 18, yellow: 0, green: 36, vehicles: 12 },
+    image: "/traffic/photo8.jpg",
+    updated: "2 mins ago",
+    cameraIP: "192.168.10.18",
+  },
+  {
+    id: "S-009",
+    name: "Signal 9",
+    top: "30%",
+    left: "70%",
+    status: "yellow",
+    stats: { red: 18, yellow: 0, green: 36, vehicles: 12 },
+    image: "/traffic/photo9.jpg",
+    updated: "1 min ago",
+    cameraIP: "192.168.10.19",
+  },
 ];
+
+
 
 const statusColor = {
   red: "#d32f2f",
@@ -302,84 +353,76 @@ export default function TrafficSignals() {
           </IconButton>
         </DialogTitle>
 
-        <DialogContent dividers sx={{ bgcolor: "#fbfcfe", px: 3, py: 3 }}>
-          <Grid container spacing={3}>
-            {/* Left: camera snapshot */}
-            <Grid item xs={12} md={6}>
-              <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid rgba(0,0,0,0.04)" }}>
-                <Box
-                  component="img"
-                  src={active ? active.image : "https://via.placeholder.com/800x450?text=No+image"}
-                  alt="live snapshot"
-                  sx={{ width: "100%", height: 360, objectFit: "cover", display: "block" }}
-                />
-              </Paper>
+       <DialogContent dividers sx={{ bgcolor: "#fbfcfe", px: 3, py: 3 }}>
+  <Grid container spacing={3}>
+    {/* Left: camera snapshot */}
+    <Box style={{width:}}>
+      <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid rgba(0,0,0,0.04)" }}>
+        <Box
+          component="img"
+          src={active ? active.image : "https://via.placeholder.com/800x450?text=No+image"}
+          alt="live snapshot"
+          sx={{ width: "100%", height: 360, objectFit: "cover", display: "block" }}
+        />
+      </Paper>
 
-              <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
-                <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
-                  Camera IP: {active ? active.cameraIP : "-"}
-                </Button>
-                <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
-                  Lat: {active ? active.latitude || "-" : "-"} • Lon: {active ? active.longitude || "-" : "-"}
-                </Button>
-              </Box>
-            </Grid>
+      <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
+        <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
+          Camera IP: {active ? active.cameraIP : "-"}
+        </Button>
+        <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
+          Lat: {active ? active.latitude || "-" : "-"} • Lon: {active ? active.longitude || "-" : "-"}
+        </Button>
+      </Box>
+    </Box>
 
-            {/* Right: professional stats card */}
-            <Grid item xs={12} md={6}>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid rgba(0,0,0,0.04)", height: "100%" }}>
-                <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, mb: 1 }}>Signal Metrics</Typography>
-                <Typography sx={{ fontSize: 13, color: "#607083", mb: 2 }}>Counts and current vehicle load</Typography>
+    {/* Right: professional stats card */}
+    <Grid item xs={12} md={6}>
+      <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid rgba(0,0,0,0.04)", height: "100%" }}>
+        <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, mb: 1 }}>Signal Metrics</Typography>
+        <Typography sx={{ fontSize: 13, color: "#607083", mb: 2 }}>Counts and current vehicle load</Typography>
 
-                <Stack spacing={2}>
-                  <Box>
-                    <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Red Light Count</Typography>
-                    <Typography sx={{ fontWeight: 700, color: statusColor.red, fontSize: 20 }}>
-                      {active ? active.stats.red : "-"}
-                    </Typography>
-                  </Box>
+        <Stack spacing={2}>
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Red Light Count</Typography>
+            <Typography sx={{ fontWeight: 700, color: statusColor.red, fontSize: 20 }}>
+              {active ? active.stats.red : "-"}
+            </Typography>
+          </Box>
 
-                  <Divider />
+          <Divider />
 
-                  <Box>
-                    <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Yellow Light Count</Typography>
-                    <Typography sx={{ fontWeight: 700, color: statusColor.yellow, fontSize: 20 }}>
-                      {active ? active.stats.yellow : "-"}
-                    </Typography>
-                  </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Green Light Count</Typography>
+            <Typography sx={{ fontWeight: 700, color: statusColor.green, fontSize: 20 }}>
+              {active ? active.stats.green : "-"}
+            </Typography>
+          </Box>
 
-                  <Divider />
+          <Divider />
 
-                  <Box>
-                    <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Green Light Count</Typography>
-                    <Typography sx={{ fontWeight: 700, color: statusColor.green, fontSize: 20 }}>
-                      {active ? active.stats.green : "-"}
-                    </Typography>
-                  </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Vehicles Present</Typography>
+            <Typography sx={{ fontWeight: 700, color: "#222", fontSize: 22 }}>
+              {active ? active.stats.vehicles : "-"}
+            </Typography>
+            <Typography sx={{ fontSize: 12, color: "#6b6b6b", mt: 0.5 }}>
+              Congestion: {active ? `${Math.min(100, Math.round((active.stats.vehicles / 300) * 100))}%` : "-"}
+            </Typography>
+          </Box>
+        </Stack>
 
-                  <Divider />
+        <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+          <Button variant="contained" sx={{ bgcolor: "#4B0082" }}>
+            Acknowledge
+          </Button>
+          <Button variant="outlined">Dispatch Patrol</Button>
+        </Box>
+      </Paper>
+    </Grid>
+  </Grid>
+</DialogContent>
 
-                  <Box>
-                    <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Vehicles Present</Typography>
-                    <Typography sx={{ fontWeight: 700, color: "#222", fontSize: 22 }}>
-                      {active ? active.stats.vehicles : "-"}
-                    </Typography>
-                    <Typography sx={{ fontSize: 12, color: "#6b6b6b", mt: 0.5 }}>
-                      Congestion: {active ? `${Math.min(100, Math.round((active.stats.vehicles / 300) * 100))}%` : "-"}
-                    </Typography>
-                  </Box>
-                </Stack>
-
-                <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-                  <Button variant="contained" sx={{ bgcolor: "#4B0082" }}>
-                    Acknowledge
-                  </Button>
-                  <Button variant="outlined">Dispatch Patrol</Button>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
-        </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2 }}>
           <Button onClick={handleCloseDetails}>Close</Button>
