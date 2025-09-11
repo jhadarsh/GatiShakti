@@ -3,6 +3,7 @@ import Navbar from './components/user/common/Navbar';
 import Landing from './pages/user/Landing';
 import StationDashboard from "./pages/user/ShowSlots";
 import AdminLayout from "./admin/Dashboard/layout";
+import ComplaintForm from "./pages/user/Reporting";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function MainLayout() {
         <Route path="/" element={<Landing />} />
         <Route path="/slots" element={<StationDashboard />} />
         <Route path="/admin/*" element={<AdminLayout />} />
+        <Route path="/reporting" element={<ComplaintForm />} />
       </Routes>
 
       {!hideLayout && <footer className="bg-gray-900 text-white p-4 text-center">

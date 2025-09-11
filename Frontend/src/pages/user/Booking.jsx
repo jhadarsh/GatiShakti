@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import jsPDF from "jspdf";
 
 const BookingModal = ({ slot, onClose, onBooked }) => {
   const [name, setName] = useState("");
@@ -7,17 +8,65 @@ const BookingModal = ({ slot, onClose, onBooked }) => {
   const [vehicleNo, setVehicleNo] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Generate PDF receipt
+  const generateReceipt = ({
+    stationName,
+    rowNumber,
+    position,
+    name,
+    phone,
+    licenseNo,
+    vehicleNo,
+    bookedAt,
+  }) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Metro Slot Booking Receipt", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Station: ${stationName}`, 20, 40);
+    doc.text(`Row Number: ${rowNumber}`, 20, 50);
+    doc.text(`Position: ${position}`, 20, 60);
+    doc.text(`Driver Name: ${name}`, 20, 70);
+    doc.text(`Vehicle No: ${vehicleNo}`, 20, 80);
+    doc.text(`Phone: ${phone}`, 20, 90);
+    doc.text(`License No: ${licenseNo}`, 20, 100);
+    doc.text(`Booked At: ${bookedAt}`, 20, 110);
+
+    doc.text("Thank you for booking!", 20, 130);
+
+    doc.save(`Booking_Receipt_${vehicleNo}.pdf`);
+  };
+
   const handleBooking = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8080/api/slots/${slot.id}/book`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, licenseNo, vehicleNo }),
-      });
+      const res = await fetch(
+        `http://localhost:8080/api/slots/${slot.id}/book`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, licenseNo, vehicleNo }),
+        }
+      );
 
       if (res.ok) {
+        const data = await res.json(); // ✅ backend response
+
+        // Generate receipt with API response
+        generateReceipt({
+          stationName: data.slot.stationName,
+          rowNumber: data.slot.rowNumber,
+          position: data.slot.position,
+          name: data.driver.name,
+          phone: data.driver.phone,
+          licenseNo: data.driver.licenseNo,
+          vehicleNo: data.driver.vehicleNo,
+          bookedAt: new Date().toLocaleString(),
+        });
+
         onClose();
         onBooked();
       } else {

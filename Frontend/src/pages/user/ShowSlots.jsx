@@ -65,7 +65,7 @@ const StationDashboard = () => {
               {Object.keys(stationData.rows).map((row) => (
                 <div key={row}>
                   <div className="mb-3 text-sm font-semibold text-gray-600">
-                    Row {row}
+                    Gate {row}
                   </div>
                   <div className="flex gap-6 flex-wrap">
                     {stationData.rows[row].map((slot) => (
