@@ -69,7 +69,6 @@ router.post("/:slotId/book", async (req, res) => {
       driver = new Driver({ name, phone, licenseNo, vehicleNo });
       await driver.save();
     } else {
-      // optional: update driver info if changed
       driver.name = name;
       driver.phone = phone;
       driver.vehicleNo = vehicleNo;
@@ -91,12 +90,19 @@ router.post("/:slotId/book", async (req, res) => {
     slot.bookedAt = new Date();
     await slot.save();
 
+    // 5. Return proper slot + station info
     res.status(200).json({
       message: "Slot booked successfully",
-      slotId: slot._id,
+      slot: {
+        id: slot._id,
+        stationName: slot.stationName,
+        rowNumber: slot.rowNumber,
+        position: slot.position,
+      },
       driver: {
         id: driver._id,
         name: driver.name,
+        phone: driver.phone,
         vehicleNo: driver.vehicleNo,
       },
       bookingId: booking._id,

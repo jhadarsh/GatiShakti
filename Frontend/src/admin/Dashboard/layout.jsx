@@ -26,6 +26,9 @@ import Violation from "../components/voilation";
 import Breakdown from "../components/breakdown";
 import PotholeDetection from "../components/pothole";
 import AdminDashboard from "../components/dashboard";
+import AdminSlots from "../components/Slots";
+import Complaint from "../components/Complaint";
+
 
 const drawerWidth = 260;
 
@@ -38,6 +41,9 @@ export default function AdminLayout() {
     { text: "Violation", icon: <ReportProblem /> },
     { text: "Vehicle Breakdown", icon: <DirectionsCar /> },
     { text: "Pothole Detection", icon: <Construction /> },
+    { text: "Slot Booking", icon: <Traffic /> },
+    { text: "User Complains", icon: <Traffic /> },
+
   ];
 
   return (
@@ -165,6 +171,8 @@ export default function AdminLayout() {
           {selectedTab === "Violation" && <Violation />}
           {selectedTab === "Vehicle Breakdown" && <Breakdown   />}
           {selectedTab === "Pothole Detection" && <PotholeDetection />}
+          {selectedTab === "Slot Booking" && <AdminSlots />}
+          {selectedTab === "User Complains" && <Complaint />}
         </Box>
       </Box>
     </Box>
