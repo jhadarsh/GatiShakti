@@ -79,10 +79,12 @@ const initialReports = [
     lat: "28.6538",
     lon: "77.2275",
     severity: "Critical",
-    image: "https://via.placeholder.com/1200x700?text=Pothole+1",
-    reportedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 1.5).toISOString(), // 1.5 hours ago
-    reporter: "Citizen App (Anil)",
-    notes: "Large pothole causing queue",
+    image: "/Admin/106.jpg",
+    reportedAt: new Date(
+      new Date().getTime() - 1000 * 60 * 60 * 1.5
+    ).toISOString(), // 1.5 hours ago
+    reporter: "Road Camera Detection",
+    notes: "Automated detection: Large pothole obstructing traffic",
     status: "open",
   },
   {
@@ -91,10 +93,12 @@ const initialReports = [
     lat: "28.6560",
     lon: "77.2100",
     severity: "Major",
-    image: "https://via.placeholder.com/1200x700?text=Pothole+2",
-    reportedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 4).toISOString(), // 4 hours ago
-    reporter: "Traffic Camera",
-    notes: "Reported via automated detector",
+    image: "/Admin/11.jpg",
+    reportedAt: new Date(
+      new Date().getTime() - 1000 * 60 * 60 * 4
+    ).toISOString(), // 4 hours ago
+    reporter: "Road Camera Detection",
+    notes: "Automated detection: Road surface damage detected",
     status: "open",
   },
   {
@@ -103,13 +107,16 @@ const initialReports = [
     lat: "28.6600",
     lon: "77.2150",
     severity: "Minor",
-    image: "https://via.placeholder.com/1200x700?text=Pothole+3",
-    reportedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 26).toISOString(), // 26 hours ago
-    reporter: "Citizen Hotline",
-    notes: "Shallow pothole near kerb",
+    image: "/Admin/new.jpeg",
+    reportedAt: new Date(
+      new Date().getTime() - 1000 * 60 * 60 * 26
+    ).toISOString(), // 26 hours ago
+    reporter: "Road Camera Detection",
+    notes: "Automated detection: Shallow pothole near kerb",
     status: "open",
   },
 ];
+
 
 /* ---------- Component ---------- */
 export default function PotholeDetection() {
@@ -123,15 +130,47 @@ export default function PotholeDetection() {
   const [openDispatchNote, setOpenDispatchNote] = React.useState(false);
   const [dispatchNote, setDispatchNote] = React.useState("");
 
-  const [snack, setSnack] = React.useState({ open: false, msg: "", sev: "info" });
+  const [snack, setSnack] = React.useState({
+    open: false,
+    msg: "",
+    sev: "info",
+  });
 
   // NEW: image modal state
   const [openImageModal, setOpenImageModal] = React.useState(false);
+  const [processedImage, setProcessedImage] = React.useState(null);
 
-  function openReportDetail(r) {
+  async function fetchProcessedImage(filePath) {
+    try {
+      // Load the original image file from public or uploads
+      const response = await fetch(filePath);
+      const blob = await response.blob();
+      const formData = new FormData();
+      formData.append("file", blob, "input.jpg");
+
+      const apiRes = await fetch("http://127.0.0.1:8000/predict/", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await apiRes.json();
+      console.log(data);
+      return "data:image/jpeg;base64," + data.output_image;
+    } catch (err) {
+      console.error("Error fetching processed image", err);
+      return null;
+    }
+  }
+
+  async function openReportDetail(r) {
     setActive(r);
     setOpenDetail(true);
+
+    // call API for processed version
+    const resultImg = await fetchProcessedImage(r.image);
+    setProcessedImage(resultImg);
   }
+
   function closeReportDetail() {
     setOpenDetail(false);
     setActive(null);
@@ -142,8 +181,14 @@ export default function PotholeDetection() {
   function handleResolve() {
     if (!active) return;
     // Mock: mark as resolved
-    setReports((prev) => prev.map((p) => (p.id === active.id ? { ...p, status: "resolved" } : p)));
-    setSnack({ open: true, msg: `Report ${active.id} marked resolved`, sev: "success" });
+    setReports((prev) =>
+      prev.map((p) => (p.id === active.id ? { ...p, status: "resolved" } : p))
+    );
+    setSnack({
+      open: true,
+      msg: `Report ${active.id} marked resolved`,
+      sev: "success",
+    });
     closeReportDetail();
   }
 
@@ -154,18 +199,27 @@ export default function PotholeDetection() {
     setReports((prev) =>
       prev.map((p) =>
         p.id === active.id
-          ? { ...p, status: "dispatched", notes: `${p.notes} | Dispatch note: ${dispatchNote || "N/A"}` }
+          ? {
+              ...p,
+              status: "dispatched",
+              notes: `${p.notes} | Dispatch note: ${dispatchNote || "N/A"}`,
+            }
           : p
       )
     );
-    setSnack({ open: true, msg: `Repair crew dispatched to ${active.id}`, sev: "success" });
+    setSnack({
+      open: true,
+      msg: `Repair crew dispatched to ${active.id}`,
+      sev: "success",
+    });
     setOpenDispatchNote(false);
     closeReportDetail();
   }
 
   // search + filter
   const filtered = reports.filter((r) => {
-    if (severityFilter !== "all" && r.severity.toLowerCase() !== severityFilter) return false;
+    if (severityFilter !== "all" && r.severity.toLowerCase() !== severityFilter)
+      return false;
     if (!q) return true;
     const s = q.toLowerCase();
     return (
@@ -205,13 +259,27 @@ export default function PotholeDetection() {
       `}</style>
 
       {/* Header */}
-      <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Box
+        sx={{
+          mb: 3,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Box>
-          <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, color: "#3b0b82", fontSize: 22 }}>
-            Pothole Detection - Reporting Panel
+          <Typography
+            sx={{
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 700,
+              color: "#3b0b82",
+              fontSize: 22,
+            }}
+          >
+            Pothole Detection By Camera
           </Typography>
           <Typography sx={{ color: "#596a77", mt: 0.5 }}>
-            Active road surface incidents. Click a report to view evidence, dispatch crews or resolve.
+           Real-time pothole detection and reporting turning every road scan into actionable safety insights.
           </Typography>
         </Box>
 
@@ -237,12 +305,40 @@ export default function PotholeDetection() {
       <Grid container spacing={3}>
         {filtered.map((r) => (
           <Grid item xs={12} key={r.id}>
-            <Paper elevation={2} className="pothole-card" sx={{ p: 2.25, borderRadius: 2, display: "flex", gap: 2, alignItems: "center", background: "linear-gradient(180deg,#ffffff,#fbfbff)" }}>
+            <Paper
+              elevation={2}
+              className="pothole-card"
+              sx={{
+                p: 2.25,
+                borderRadius: 2,
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+                background: "linear-gradient(180deg,#ffffff,#fbfbff)",
+              }}
+            >
               {/* Thumbnail left */}
               <Box sx={{ position: "relative" }}>
-                <Box className="card-left-thumb" component="img" src={r.image} alt={r.id} sx={{ objectFit: "cover", display: "block", width: "100%", height: "100%" }} />
                 <Box
-                  className={`severity-badge ${r.severity === "Critical" ? "severity-critical" : r.severity === "Major" ? "severity-major" : "severity-minor"}`}
+                  className="card-left-thumb"
+                  component="img"
+                  src={r.image}
+                  alt={r.id}
+                  sx={{
+                    objectFit: "cover",
+                    display: "block",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+                <Box
+                  className={`severity-badge ${
+                    r.severity === "Critical"
+                      ? "severity-critical"
+                      : r.severity === "Major"
+                      ? "severity-major"
+                      : "severity-minor"
+                  }`}
                 >
                   {r.severity}
                 </Box>
@@ -250,28 +346,76 @@ export default function PotholeDetection() {
 
               {/* Details center */}
               <Box sx={{ flex: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Box>
-                    <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: 16 }}>{r.id}</Typography>
-                    <Typography sx={{ color: "#454f5a", fontWeight: 700 }}>{r.place}</Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 800,
+                        fontSize: 16,
+                      }}
+                    >
+                      {r.id}
+                    </Typography>
+                    <Typography sx={{ color: "#454f5a", fontWeight: 700 }}>
+                      {r.place}
+                    </Typography>
 
-                    <Stack direction="row" spacing={2} sx={{ mt: 1 }} alignItems="center">
-                      <Chip icon={<CalendarToday />} label={formatFull(r.reportedAt)} size="small" />
-                      <Chip icon={<AccessTime />} label={timeAgo(r.reportedAt)} size="small" />
-                      <Chip icon={<Room />} label={`Lat:${r.lat} Lon:${r.lon}`} size="small" />
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{ mt: 1 }}
+                      alignItems="center"
+                    >
+                      <Chip
+                        icon={<CalendarToday />}
+                        label={formatFull(r.reportedAt)}
+                        size="small"
+                      />
+                      <Chip
+                        icon={<AccessTime />}
+                        label={timeAgo(r.reportedAt)}
+                        size="small"
+                      />
+                      <Chip
+                        icon={<Room />}
+                        label={`Lat:${r.lat} Lon:${r.lon}`}
+                        size="small"
+                      />
                     </Stack>
 
-                    <Typography sx={{ mt: 1, color: "#6b7379" }}>{r.notes}</Typography>
+                    <Typography sx={{ mt: 1, color: "#6b7379" }}>
+                      {r.notes}
+                    </Typography>
                   </Box>
 
                   <Box sx={{ textAlign: "right", minWidth: 220 }}>
                     <Stack direction="column" spacing={1} alignItems="flex-end">
-                      <Typography sx={{ fontWeight: 700, color: r.status === "resolved" ? "#2e7d32" : "#4b0082" }}>
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          color:
+                            r.status === "resolved" ? "#2e7d32" : "#4b0082",
+                        }}
+                      >
                         {r.status.toUpperCase()}
                       </Typography>
 
                       <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                        <Button variant="contained" size="small" sx={{ bgcolor: "#4B0082", textTransform: "none", fontWeight: 700 }} onClick={() => openReportDetail(r)}>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          sx={{
+                            bgcolor: "#4B0082",
+                            textTransform: "none",
+                            fontWeight: 700,
+                          }}
+                          onClick={() => openReportDetail(r)}
+                        >
                           View
                         </Button>
                         <Button
@@ -279,8 +423,16 @@ export default function PotholeDetection() {
                           size="small"
                           onClick={() => {
                             // Mark resolved inline as quick action
-                            setReports((prev) => prev.map((p) => (p.id === r.id ? { ...p, status: "resolved" } : p)));
-                            setSnack({ open: true, msg: `${r.id} marked resolved`, sev: "success" });
+                            setReports((prev) =>
+                              prev.map((p) =>
+                                p.id === r.id ? { ...p, status: "resolved" } : p
+                              )
+                            );
+                            setSnack({
+                              open: true,
+                              msg: `${r.id} marked resolved`,
+                              sev: "success",
+                            });
                           }}
                           sx={{ color: "#6b6b6b", textTransform: "none" }}
                         >
@@ -298,21 +450,44 @@ export default function PotholeDetection() {
         {filtered.length === 0 && (
           <Grid item xs={12}>
             <Paper sx={{ p: 4, textAlign: "center", borderRadius: 2 }}>
-              <Typography sx={{ fontWeight: 700 }}>No pothole reports match your filter</Typography>
-              <Typography sx={{ color: "#6b7379", mt: 1 }}>Try clearing search or changing severity filter.</Typography>
+              <Typography sx={{ fontWeight: 700 }}>
+                No pothole reports match your filter
+              </Typography>
+              <Typography sx={{ color: "#6b7379", mt: 1 }}>
+                Try clearing search or changing severity filter.
+              </Typography>
             </Paper>
           </Grid>
         )}
       </Grid>
 
       {/* ---------------- Detail Modal ---------------- */}
-      <Dialog open={openDetail} onClose={closeReportDetail} maxWidth="lg" fullWidth>
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Dialog
+        open={openDetail}
+        onClose={closeReportDetail}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box>
-            <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700 }}>
+            <Typography
+              sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700 }}
+            >
               {active ? `${active.id} — ${active.place}` : "Report Details"}
             </Typography>
-            <Typography sx={{ color: "#6b6b6b", fontSize: 13 }}>{active ? timeAgo(active.reportedAt) + " • " + formatFull(active.reportedAt) : ""}</Typography>
+            <Typography sx={{ color: "#6b6b6b", fontSize: 13 }}>
+              {active
+                ? timeAgo(active.reportedAt) +
+                  " • " +
+                  formatFull(active.reportedAt)
+                : ""}
+            </Typography>
           </Box>
           <IconButton onClick={closeReportDetail}>
             <Close />
@@ -322,8 +497,21 @@ export default function PotholeDetection() {
         <DialogContent dividers>
           <Grid container spacing={3}>
             <Box sx={{ width: "50%" }}>
-              <Paper elevation={0} sx={{ position: "relative", borderRadius: 1.5, overflow: "hidden", border: "1px solid rgba(10,15,30,0.04)" }}>
-                <Box component="img" src={active ? active.image : ""} alt="pothole" sx={{ width: "100%", height: 480, objectFit: "cover" }} />
+              <Paper
+                elevation={0}
+                sx={{
+                  position: "relative",
+                  borderRadius: 1.5,
+                  overflow: "hidden",
+                  border: "1px solid rgba(10,15,30,0.04)",
+                }}
+              >
+                <Box
+                  component="img"
+                    src={processedImage || ""}
+          alt="processed"
+                  sx={{ width: "100%", height: 480, objectFit: "cover" }}
+                />
 
                 {/* INFO BUTTON - opens image modal */}
                 <Tooltip title="Open image">
@@ -346,50 +534,91 @@ export default function PotholeDetection() {
             </Box>
 
             <Box>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 1.5, border: "1px solid rgba(10,15,30,0.04)" }}>
-                <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, mb: 1 }}>Report Metadata</Typography>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  borderRadius: 1.5,
+                  border: "1px solid rgba(10,15,30,0.04)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: 700,
+                    mb: 1,
+                  }}
+                >
+                  Report Metadata
+                </Typography>
 
                 <Stack spacing={1.2}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography sx={{ color: "#6b6b6b" }}>Report ID</Typography>
-                    <Typography sx={{ fontWeight: 700 }}>{active ? active.id : "-"}</Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {active ? active.id : "-"}
+                    </Typography>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">
                     <Typography sx={{ color: "#6b6b6b" }}>Severity</Typography>
-                    <Chip label={active ? active.severity : ""} color="warning" sx={{ fontWeight: 700 }} />
+                    <Chip
+                      label={active ? active.severity : ""}
+                      color="warning"
+                      sx={{ fontWeight: 700 }}
+                    />
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">
                     <Typography sx={{ color: "#6b6b6b" }}>Location</Typography>
-                    <Typography sx={{ fontWeight: 700 }}>{active ? active.place : "-"}</Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {active ? active.place : "-"}
+                    </Typography>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">
-                    <Typography sx={{ color: "#6b6b6b" }}>Coordinates</Typography>
-                    <Typography sx={{ fontWeight: 700 }}>{active ? `${active.lat}, ${active.lon}` : "-"}</Typography>
+                    <Typography sx={{ color: "#6b6b6b" }}>
+                      Coordinates
+                    </Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {active ? `${active.lat}, ${active.lon}` : "-"}
+                    </Typography>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">
-                    <Typography sx={{ color: "#6b6b6b" }}>Reported By</Typography>
-                    <Typography sx={{ fontWeight: 700 }}>{active ? active.reporter : "-"}</Typography>
+                    <Typography sx={{ color: "#6b6b6b" }}>
+                      Reported By
+                    </Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {active ? active.reporter : "-"}
+                    </Typography>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">
-                    <Typography sx={{ color: "#6b6b6b" }}>Reported At</Typography>
-                    <Typography sx={{ fontWeight: 700 }}>{active ? formatFull(active.reportedAt) : "-"}</Typography>
+                    <Typography sx={{ color: "#6b6b6b" }}>
+                      Reported At
+                    </Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {active ? formatFull(active.reportedAt) : "-"}
+                    </Typography>
                   </Stack>
                 </Stack>
 
                 <Divider sx={{ my: 2 }} />
 
                 <Typography sx={{ color: "#6b6b6b", mb: 1 }}>Notes</Typography>
-                <Typography sx={{ mb: 2 }}>{active ? active.notes : "-"}</Typography>
+                <Typography sx={{ mb: 2 }}>
+                  {active ? active.notes : "-"}
+                </Typography>
 
                 <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
                   <Button
                     variant="contained"
-                    sx={{ bgcolor: "#4B0082", textTransform: "none", fontWeight: 700 }}
+                    sx={{
+                      bgcolor: "#4B0082",
+                      textTransform: "none",
+                      fontWeight: 700,
+                    }}
                     onClick={() => {
                       // open dispatch note mini dialog
                       setOpenDispatchNote(true);
@@ -398,7 +627,11 @@ export default function PotholeDetection() {
                     Dispatch Repair Crew
                   </Button>
 
-                  <Button variant="outlined" sx={{ textTransform: "none" }} onClick={handleResolve}>
+                  <Button
+                    variant="outlined"
+                    sx={{ textTransform: "none" }}
+                    onClick={handleResolve}
+                  >
                     Mark Resolved
                   </Button>
                 </Stack>
@@ -415,16 +648,42 @@ export default function PotholeDetection() {
       </Dialog>
 
       {/* Image modal (opened by the 'i' button) */}
-      <Dialog open={openImageModal} onClose={() => setOpenImageModal(false)} maxWidth="lg" fullWidth>
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700 }}>Model Input</Typography>
+      <Dialog
+        open={openImageModal}
+        onClose={() => setOpenImageModal(false)}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700 }}
+          >
+            Model Input
+          </Typography>
           <IconButton onClick={() => setOpenImageModal(false)}>
             <Close />
           </IconButton>
         </DialogTitle>
 
         <DialogContent dividers>
-          <Box component="img" src={active ? active.image : ""} alt="pothole-large" sx={{ width: "100%", height: "70vh", objectFit: "contain", display: "block", bgcolor: "black" }} />
+          <Box
+            component="img"
+            src={processedImage || ""}
+            alt="pothole-large"
+            sx={{
+              width: "100%",
+              height: "70vh",
+              objectFit: "contain",
+              display: "block",
+              bgcolor: "black",
+            }}
+          />
         </DialogContent>
 
         <DialogActions>
@@ -433,10 +692,17 @@ export default function PotholeDetection() {
       </Dialog>
 
       {/* Dispatch Note Dialog */}
-      <Dialog open={openDispatchNote} onClose={() => setOpenDispatchNote(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openDispatchNote}
+        onClose={() => setOpenDispatchNote(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Dispatch Repair Crew</DialogTitle>
         <DialogContent dividers>
-          <Typography sx={{ color: "#6b6b6b", mb: 2 }}>Enter instructions for crew (optional) and confirm dispatch.</Typography>
+          <Typography sx={{ color: "#6b6b6b", mb: 2 }}>
+            Enter instructions for crew (optional) and confirm dispatch.
+          </Typography>
           <TextField
             label="Dispatch Note"
             multiline
@@ -456,7 +722,11 @@ export default function PotholeDetection() {
                 handleDispatch();
               } else {
                 // if no active (quick dispatch triggered from list), we find active from state
-                setSnack({ open: true, msg: "No active report selected", sev: "error" });
+                setSnack({
+                  open: true,
+                  msg: "No active report selected",
+                  sev: "error",
+                });
               }
             }}
             sx={{ bgcolor: "#4B0082", textTransform: "none" }}
@@ -473,7 +743,10 @@ export default function PotholeDetection() {
         onClose={() => setSnack((s) => ({ ...s, open: false }))}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <Alert severity={snack.sev} onClose={() => setSnack((s) => ({ ...s, open: false }))}>
+        <Alert
+          severity={snack.sev}
+          onClose={() => setSnack((s) => ({ ...s, open: false }))}
+        >
           {snack.msg}
         </Alert>
       </Snackbar>
