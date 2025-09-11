@@ -26,6 +26,9 @@ import Violation from "../components/voilation";
 import Breakdown from "../components/breakdown";
 import PotholeDetection from "../components/pothole";
 import AdminDashboard from "../components/dashboard";
+import AnalyticsDashboard from "../components/sewage";
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+
 
 const drawerWidth = 260;
 
@@ -37,7 +40,8 @@ export default function AdminLayout() {
     { text: "Traffic Signal", icon: <Traffic /> },
     { text: "Violation", icon: <ReportProblem /> },
     { text: "Vehicle Breakdown", icon: <DirectionsCar /> },
-    { text: "Pothole Detection", icon: <Construction /> },
+    { text: "Pothole Detection", icon: <LocationSearchingIcon /> },
+    { text: "Sewage System", icon: <Construction /> },
   ];
 
   return (
@@ -165,6 +169,7 @@ export default function AdminLayout() {
           {selectedTab === "Violation" && <Violation />}
           {selectedTab === "Vehicle Breakdown" && <Breakdown   />}
           {selectedTab === "Pothole Detection" && <PotholeDetection />}
+          {selectedTab === "Sewage System" && <AnalyticsDashboard />}
         </Box>
       </Box>
     </Box>
