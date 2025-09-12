@@ -5,7 +5,7 @@ import PreviousBookings from "../../components/user/Slots/PreviousBookings";
 
 const StationDashboard = () => {
   const [stationName, setStationName] = useState("");
-  const [currentStation, setCurrentStation] = useState("Rajiv Chowk");
+  const [currentStation, setCurrentStation] = useState("Kashmere Gate");
   const [stationData, setStationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);

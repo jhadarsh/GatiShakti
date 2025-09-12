@@ -356,7 +356,7 @@ export default function TrafficSignals() {
        <DialogContent dividers sx={{ bgcolor: "#fbfcfe", px: 3, py: 3 }}>
   <Grid container spacing={3}>
     {/* Left: camera snapshot */}
-    <Box style={{width:}}>
+    <Box style={{width:'45%'}}>
       <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid rgba(0,0,0,0.04)" }}>
         <Box
           component="img"

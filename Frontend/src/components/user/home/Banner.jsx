@@ -6,7 +6,7 @@ const Banner = ({ altText = "Banner" }) => {
     <img
       src={banner}
       alt={altText}
-      className="w-full h-60 md:h-80 lg:h-96 object-contain rounded-2xl "
+      className="w-full h-60 md:h-80 lg:h-full object-contain  "
     />
   );
 };

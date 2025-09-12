@@ -12,14 +12,12 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@headlessui/react": "^2.2.7",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
     "@mui/styled-engine-sc": "^7.3.2",
-
     "axios": "^1.11.0",
-
     "date-fns": "^4.1.0",
-
     "framer-motion": "^12.23.12",
     "install": "^0.13.0",
     "jspdf": "^3.0.2",

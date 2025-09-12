@@ -169,7 +169,7 @@
     }
     });
 
-
+    
     //Reporting Admin Routes
     // 1. Get all complaints (Admin view)
 router.get("/complaints", async (req, res) => {

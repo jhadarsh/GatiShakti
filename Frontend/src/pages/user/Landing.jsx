@@ -4,9 +4,10 @@ import TripPlanner from "../../components/user/home/plan";
 export default function Landing() {
     return(
         <>
-        <Hero/>
-        <Banner/> 
+        <Hero/>       
+        <Banner/>
         <TripPlanner/>
+
         </>
     )
 }
