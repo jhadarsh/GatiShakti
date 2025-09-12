@@ -47,8 +47,8 @@ export default function AdminLayout() {
     { text: "Vehicle Breakdown", icon: <DirectionsCar /> },
 
    
-    { text: "Slot Booking", icon: <Traffic /> },
-    { text: "User Complains", icon: <Traffic /> },
+    // { text: "Slot Booking", icon: <Traffic /> },
+ 
 
     { text: "Pothole Detection", icon: <LocationSearchingIcon /> },
     { text: "Sewage System", icon: <Construction /> },

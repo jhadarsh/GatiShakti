@@ -36,7 +36,8 @@ import {
   Bar,
   Legend,
 } from "recharts";
-
+import MetroStationDashboard from "./MetroStationDashboard";
+import Complaint from "./Complaint";
 // Mock Insights Data
 const kpis = {
   cameras: 124,
@@ -160,7 +161,7 @@ export default function PremiumDashboard() {
       </ResponsiveContainer>
     </Paper>
   </Box>
-
+ 
    <Box sx={{ width: '30%', mb: 4 }}>
     <Paper sx={chartCard}>
       <Typography sx={chartTitle}>Accidents Prevented by Year</Typography>
@@ -176,7 +177,8 @@ export default function PremiumDashboard() {
     </Paper>
   </Box>
 </Grid>
-
+<MetroStationDashboard/>
+<Complaint/>
 
       {/* Activity Feed */}
       <Box sx={{ mt: 4 }}>
