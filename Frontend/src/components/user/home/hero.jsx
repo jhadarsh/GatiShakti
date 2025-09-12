@@ -27,6 +27,33 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
+    // Hardcoded data
+  const redTime = 45;    // seconds
+  const yellowTime = 5;  // seconds
+  const greenTime = 30;  // seconds
+  const densityTarget = 120; // cars
+
+  // State for animated count
+  const [density, setDensity] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 1500; // 1.5s animation
+    const increment = Math.ceil(densityTarget / (duration / 30));
+
+    const interval = setInterval(() => {
+      start += increment;
+      if (start >= densityTarget) {
+        setDensity(densityTarget);
+        clearInterval(interval);
+      } else {
+        setDensity(start);
+      }
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [densityTarget]);
+
   return (
     <section className="relative w-full h-[500px] bg-white overflow-hidden flex items-center justify-center">
       
@@ -40,16 +67,41 @@ const Hero = () => {
 
         
         {/* Blinking Red Light and Number */}
-        <div className="absolute bottom-0 mb-10 left-14 z-10 flex items-center gap-4">
-          {/* Blinking Red Light */}
-          <div className="w-5 h-5 rounded-full bg-red-500 border border-4-black animate-ping"></div>
+     <div className="absolute bottom-0 mb-4 left-8 flex flex-col gap-3 bg-white/20 backdrop-blur-md p-3 rounded-lg shadow-md border border-white/30 z-[9999]">
+  {/* Red Light */}
+  <div className="flex items-center gap-3">
+    <div className="w-4 h-4 rounded-full bg-red-500 animate-ping" />
+    <div className="text-white text-sm font-semibold">
+      Next Red: <span className="text-red-400">{redTime}s</span>
+    </div>
+  </div>
 
-          {/* Dynamic Number */}
-          <div className="text-white text-3xl font-semibold">
-            {number.toLocaleString()}
-             &nbsp;meters
-          </div>
-        </div>
+  {/* Yellow Light */}
+  <div className="flex items-center gap-3">
+    <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse" />
+    <div className="text-white text-sm font-semibold">
+      Next Yellow: <span className="text-yellow-300">{yellowTime}s</span>
+    </div>
+  </div>
+
+  {/* Green Light */}
+  <div className="flex items-center gap-3">
+    <div className="w-4 h-4 rounded-full bg-green-500 animate-bounce" />
+    <div className="text-white text-sm font-semibold">
+      Next Green: <span className="text-green-300">{greenTime}s</span>
+    </div>
+  </div>
+
+  {/* Traffic Density */}
+  <div className="flex items-center gap-3 border-t border-white/30 pt-2">
+    <div className="w-4 h-4 rounded-full bg-blue-500 shadow-sm shadow-blue-400" />
+    <div className="text-white text-sm font-semibold">
+      Density: <span className="text-blue-300">{density}</span> cars
+    </div>
+  </div>
+</div>
+
+
       </div>
 
       {/* Road image along car path */}

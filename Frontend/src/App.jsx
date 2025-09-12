@@ -7,6 +7,7 @@ import ComplaintForm from "./pages/user/Reporting";
 import Footer from "./components/user/common/Footer";
 import About from "./components/user/common/About";
 import ContactUs from "./components/user/common/ContactUs";
+import Guide from "./components/user/home/Guide";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function MainLayout() {
         <Route path="/contact" element={<ContactUs/>} />
 
       </Routes>
+      <Guide/>
 
       {!hideLayout && <Footer/>}
     </>
