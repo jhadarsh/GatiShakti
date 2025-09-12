@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from 'framer-motion';
 import {
   Box,
   Dialog,
@@ -18,11 +19,11 @@ import {
   Badge,
   FormHelperText,
   Snackbar,
-  Alert
+  Alert,
+  Chip
 } from "@mui/material";
-import { CameraAlt, Close, Add } from "@mui/icons-material";
+import { CameraAlt, Close, Add, History } from "@mui/icons-material";
 import VideocamIcon from '@mui/icons-material/Videocam';
-
 
 const initialSignals = [
   {
@@ -31,30 +32,83 @@ const initialSignals = [
     top: "8%",
     left: "28%",
     status: "red",
-    stats: { red: 0.0, yellow: 0, green: 12, vehicles: 4 },
-    image: "/traffic/Photo1.jpg",
-    updated: "2 mins ago",
+    currentIndex: 0,
+    lastUpdateTime: Date.now(),
+    greenInterval: 15000, // 15 seconds for demo (adjust as needed)
+    dataHistory: [
+      {
+        stats: { red: 0.0, yellow: 7, green: 12, vehicles: 4 },
+        image: "/traffic/Photo1.jpg",
+        updated: "2 mins ago",
+        timestamp: "10:56 PM"
+      },
+      {
+        stats: { red: 6, yellow: 15, green: 42, vehicles: 14 },
+        image: "/traffic/Photo2.jpg", 
+        updated: "5 mins ago",
+        timestamp: "10:53 PM"
+      },
+      {
+        stats: { red: 21, yellow: 10, green: 21, vehicles: 7 },
+        image: "/traffic/Photo3.jpg",
+        updated: "8 mins ago", 
+        timestamp: "10:50 PM"
+      },
+      {
+        stats: { red: 10, yellow: 20, green: 51, vehicles: 17 },
+        image: "/traffic/Photo4.jpg",
+        updated: "11 mins ago",
+        timestamp: "10:47 PM"
+      }
+    ],
     cameraIP: "192.168.10.11",
   },
   {
     id: "S-002",
-    name: "Signal 2",
+    name: "Signal 2", 
     top: "18%",
     left: "62%",
     status: "green",
-    stats: { red: 6.0, yellow: 0, green: 42, vehicles: 14 },
-    image: "/traffic/Photo2.jpg",
-    updated: "1 min ago",
+    currentIndex: 0,
+    lastUpdateTime: Date.now(),
+    greenInterval: 12000, // 12 seconds for demo
+    dataHistory: [
+      {
+        stats: { red: 25, yellow: 20, green: 51, vehicles: 17 },
+        image: "/traffic/Photo5.jpg",
+        updated: "1 min ago",
+        timestamp: "10:57 PM"
+      },
+      {
+        stats: { red: 25, yellow: 22, green: 54, vehicles: 18 },
+        image: "/traffic/Photo6.jpg",
+        updated: "4 mins ago", 
+        timestamp: "10:54 PM"
+      },
+      {
+        stats: { red: 27, yellow: 15, green: 36, vehicles: 12 },
+        image: "/traffic/Photo7.jpg",
+        updated: "7 mins ago",
+        timestamp: "10:51 PM"
+      },
+      {
+        stats: { red: 18, yellow: 12, green: 36, vehicles: 12 },
+        image: "/traffic/Photo8.jpg",
+        updated: "10 mins ago",
+        timestamp: "10:48 PM"
+      }
+    ],
     cameraIP: "192.168.10.12",
   },
+  // Rest of the signals remain as original structure
   {
     id: "S-003",
     name: "Signal 3",
     top: "46%",
     left: "50%",
     status: "yellow",
-    stats: { red: 21, yellow: 0, green: 21, vehicles: 7 },
-    image: "/traffic/photo3.jpg",
+    stats: { red: 21, yellow:10, green: 21, vehicles: 7 },
+    image: "/traffic/Photo9.jpg",
     updated: "20 sec ago",
     cameraIP: "192.168.10.13",
   },
@@ -64,8 +118,8 @@ const initialSignals = [
     top: "66%",
     left: "34%",
     status: "red",
-    stats: { red: 10.5, yellow: 0, green: 51, vehicles: 17 },
-    image: "/traffic/photo4.jpg",
+    stats: { red: 10.5, yellow: 13, green: 51, vehicles: 17 },
+    image: "/traffic/Photo9.jpg",
     updated: "30 sec ago",
     cameraIP: "192.168.10.14",
   },
@@ -75,7 +129,7 @@ const initialSignals = [
     top: "20%",
     left: "45%",
     status: "green",
-    stats: { red: 25.5, yellow: 0, green: 51, vehicles: 17 },
+    stats: { red: 25.5, yellow: 23, green: 51, vehicles: 17 },
     image: "/traffic/photo5.jpg",
     updated: "1 min ago",
     cameraIP: "192.168.10.15",
@@ -86,8 +140,8 @@ const initialSignals = [
     top: "38%",
     left: "65%",
     status: "yellow",
-    stats: { red: 25.5, yellow: 0, green: 54, vehicles: 18 },
-    image: "/traffic/photo6.jpg",
+    stats: { red: 25.5, yellow: 20, green: 54, vehicles: 18 },
+    image: "/traffic/Photo9.jpg",
     updated: "45 sec ago",
     cameraIP: "192.168.10.16",
   },
@@ -97,8 +151,8 @@ const initialSignals = [
     top: "55%",
     left: "40%",
     status: "red",
-    stats: { red: 27.0, yellow: 0, green: 36, vehicles: 12 },
-    image: "/traffic/photo7.jpg",
+    stats: { red: 27.0, yellow: 15, green: 36, vehicles: 12 },
+    image: "/traffic/Photo9.jpg",
     updated: "3 mins ago",
     cameraIP: "192.168.10.17",
   },
@@ -108,8 +162,8 @@ const initialSignals = [
     top: "70%",
     left: "55%",
     status: "green",
-    stats: { red: 18, yellow: 0, green: 36, vehicles: 12 },
-    image: "/traffic/photo8.jpg",
+    stats: { red: 18, yellow: 15, green: 36, vehicles: 12 },
+    image: "/traffic/Photo9.jpg",
     updated: "2 mins ago",
     cameraIP: "192.168.10.18",
   },
@@ -119,14 +173,12 @@ const initialSignals = [
     top: "30%",
     left: "70%",
     status: "yellow",
-    stats: { red: 18, yellow: 0, green: 36, vehicles: 12 },
-    image: "/traffic/photo9.jpg",
+    stats: { red: 18, yellow: 14, green: 36, vehicles: 12 },
+    image: "/traffic/Photo9.jpg",
     updated: "1 min ago",
     cameraIP: "192.168.10.19",
   },
 ];
-
-
 
 const statusColor = {
   red: "#d32f2f",
@@ -138,32 +190,100 @@ export default function TrafficSignals() {
   const [signals, setSignals] = React.useState(initialSignals);
   const [openDetails, setOpenDetails] = React.useState(false);
   const [active, setActive] = React.useState(null);
-
   const [openAdd, setOpenAdd] = React.useState(false);
   const [form, setForm] = React.useState({
     name: "",
     id: "",
     latitude: "",
     longitude: "",
-    posX: "", // percent left
-    posY: "", // percent top
+    posX: "",
+    posY: "",
     cameraIP: "",
     image: "https://via.placeholder.com/800x450?text=New+Signal+Snapshot",
   });
   const [formErrors, setFormErrors] = React.useState({});
   const [snack, setSnack] = React.useState({ open: false, message: "", severity: "success" });
 
-  // Open details modal
+  // Auto-update functionality for signals with dataHistory
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setSignals(prevSignals => {
+        return prevSignals.map(signal => {
+          // Only auto-update signals that have dataHistory (first 2 signals)
+          if (signal.dataHistory && signal.greenInterval) {
+            const now = Date.now();
+            const timeSinceLastUpdate = now - signal.lastUpdateTime;
+            
+            if (timeSinceLastUpdate >= signal.greenInterval) {
+              const nextIndex = (signal.currentIndex + 1) % signal.dataHistory.length;
+              return {
+                ...signal,
+                currentIndex: nextIndex,
+                lastUpdateTime: now
+              };
+            }
+          }
+          return signal;
+        });
+      });
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Helper functions for signals with dataHistory
+  function hasDataHistory(signal) {
+    return signal && signal.dataHistory && signal.dataHistory.length > 0;
+  }
+
+  function getCurrentData(signal) {
+    if (!hasDataHistory(signal)) {
+      return {
+        stats: signal.stats || {},
+        image: signal.image || "",
+        updated: signal.updated || "",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+    }
+    return signal.dataHistory[signal.currentIndex];
+  }
+
+  function getDisplayData(signal) {
+    return getCurrentData(signal); // Show current data
+  }
+
+  // Modified function to handle manual cycling
   function handleOpenDetails(sig) {
-    setActive(sig);
+    if (hasDataHistory(sig)) {
+      // Manual cycle for signals with history
+      const updatedSignals = signals.map(signal => {
+        if (signal.id === sig.id) {
+          const nextIndex = (signal.currentIndex + 1) % signal.dataHistory.length;
+          return { 
+            ...signal, 
+            currentIndex: nextIndex,
+            lastUpdateTime: Date.now() // Reset timer on manual click
+          };
+        }
+        return signal;
+      });
+      
+      setSignals(updatedSignals);
+      const updatedSignal = updatedSignals.find(s => s.id === sig.id);
+      setActive(updatedSignal);
+    } else {
+      // Regular signals without history
+      setActive(sig);
+    }
     setOpenDetails(true);
   }
+
   function handleCloseDetails() {
     setOpenDetails(false);
     setActive(null);
   }
 
-  // Add signal modal logic
+  // Rest of your existing functions remain the same
   function handleOpenAdd() {
     setForm({
       name: "",
@@ -178,6 +298,7 @@ export default function TrafficSignals() {
     setFormErrors({});
     setOpenAdd(true);
   }
+
   function handleCloseAdd() {
     setOpenAdd(false);
     setFormErrors({});
@@ -187,7 +308,6 @@ export default function TrafficSignals() {
     const e = {};
     if (!form.name) e.name = "Name required";
     if (!form.cameraIP) e.cameraIP = "Camera IP required";
-    // For placement we require posX and posY as percentage so admin can place precisely
     if (!form.posX || isNaN(Number(form.posX)) || Number(form.posX) < 0 || Number(form.posX) > 100)
       e.posX = "Position (left %) required between 0 and 100";
     if (!form.posY || isNaN(Number(form.posY)) || Number(form.posY) < 0 || Number(form.posY) > 100)
@@ -219,8 +339,8 @@ export default function TrafficSignals() {
   }
 
   return (
-    <Box sx={{ fontFamily: "'Inter', sans-serif",  minHeight: "100vh", p: 4 }}>
-      {/* Small style block for marker/pulse */}
+    <Box sx={{ fontFamily: "'Inter', sans-serif", minHeight: "100vh", p: 4 }}>
+      {/* Styles remain the same */}
       <style>{`
         .map-container { border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(16,24,40,0.08); background: white; border: 1px solid rgba(15,23,42,0.04); }
         .signal-marker { position: absolute; transform: translate(-50%, -50%); cursor: pointer; display:flex; align-items:center; justify-content:center; }
@@ -232,6 +352,11 @@ export default function TrafficSignals() {
           100% { transform: translate(-50%, -50%) scale(1.9); opacity:0; }
         }
         .marker-label { position: absolute; transform: translate(-50%, 70%); background: rgba(255,255,255,0.95); padding:6px 10px; border-radius:10px; font-size:12px; box-shadow: 0 8px 20px rgba(10,15,30,0.06); border: 1px solid rgba(0,0,0,0.04);}
+        .auto-cycling { animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow {
+          from { box-shadow: 0 8px 22px rgba(11,15,30,0.06); }
+          to { box-shadow: 0 8px 22px rgba(75,0,130,0.3); }
+        }
       `}</style>
 
       {/* Header */}
@@ -241,7 +366,7 @@ export default function TrafficSignals() {
             Traffic Signals - Authority Console
           </Typography>
           <Typography variant="body2" sx={{ color: "#566477", mt: 0.5 }}>
-            Official traffic signal management — accurate, auditable, and secure.
+            Official traffic signal management — S-001 & S-002 auto-cycle every green interval
           </Typography>
         </Box>
 
@@ -265,7 +390,6 @@ export default function TrafficSignals() {
 
       {/* Map Card */}
       <Paper className="map-container" elevation={0} sx={{ position: "relative", width: "100%", height: { xs: 520, md: 760 } }}>
-        {/* Background map */}
         <Box
           component="img"
           src="/DelhiMap.png"
@@ -273,7 +397,6 @@ export default function TrafficSignals() {
           sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "contrast(0.98) saturate(0.98)" }}
         />
 
-        {/* Small overlay header (glassy) */}
         <Box
           sx={{
             position: "absolute",
@@ -293,42 +416,52 @@ export default function TrafficSignals() {
             <VideocamIcon />
           </Avatar>
           <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>Surveillance Map</Typography>
-            <Typography sx={{ fontSize: 12, color: "#596a7a" }}>Live camera overlays & signal management</Typography>
+            <Typography sx={{ fontWeight: 700, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>Smart Surveillance</Typography>
+            <Typography sx={{ fontSize: 12, color: "#596a7a" }}>Auto-cycling data • Click for manual control</Typography>
           </Box>
         </Box>
 
         {/* Markers */}
-        {signals.map((s) => (
-          <Box
-            key={s.id}
-            className="signal-marker"
-            sx={{ top: s.top, left: s.left }}
-            onClick={() => handleOpenDetails(s)}
-          >
-            {/* pulse */}
-            <Box className="pulse" sx={{ bgcolor: statusColor[s.status] }} />
-            {/* bubble with camera icon */}
-            <Tooltip title={`${s.name} — ${s.id}`} placement="top">
-              <Box className="signal-bubble" sx={{ width: 62, height: 62, borderRadius: 14 }}>
-                <Badge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  badgeContent={<Box sx={{ width: 12, height: 12, bgcolor: statusColor[s.status], borderRadius: "50%", border: "2px solid white" }} />}
+        {signals.map((s) => {
+          const displayData = getDisplayData(s);
+          const isAutoCycling = hasDataHistory(s);
+          
+          return (
+            <Box
+              key={s.id}
+              className="signal-marker"
+              sx={{ top: s.top, left: s.left }}
+              onClick={() => handleOpenDetails(s)}
+            >
+              <Box className="pulse" sx={{ bgcolor: statusColor[s.status] }} />
+              <Tooltip 
+                title={`${s.name} — ${s.id} ${isAutoCycling ? '(Auto-cycling every ' + (s.greenInterval/1000) + 's)' : ''}`} 
+                placement="top"
+              >
+                <Box 
+                  className={`signal-bubble ${isAutoCycling ? 'auto-cycling' : ''}`} 
+                  sx={{ width: 62, height: 62, borderRadius: 14 }}
                 >
-                  <Avatar sx={{ bgcolor: "#fff", color: "#333", width: 46, height: 46, border: "1px solid rgba(0,0,0,0.04)" }}>
-                    <VideocamIcon sx={{ fontSize: 20, color: "#333" }} />
-                  </Avatar>
-                </Badge>
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    badgeContent={<Box sx={{ width: 12, height: 12, bgcolor: statusColor[s.status], borderRadius: "50%", border: "2px solid white" }} />}
+                  >
+                    <Avatar sx={{ bgcolor: "#fff", color: "#333", width: 46, height: 46, border: "1px solid rgba(0,0,0,0.04)" }}>
+                      <VideocamIcon sx={{ fontSize: 20, color: "#333" }} />
+                    </Avatar>
+                  </Badge>
+                </Box>
+              </Tooltip>
+              <Box className="marker-label">
+                <Typography sx={{ fontSize: 12, fontWeight: 700 }}>
+                  {s.id}
+                  {isAutoCycling && <span style={{ color: '#4B0082' }}> ●</span>}
+                </Typography>
               </Box>
-            </Tooltip>
-
-            {/* small label */}
-            <Box className="marker-label">
-              <Typography sx={{ fontSize: 12, fontWeight: 700 }}>{s.id}</Typography>
             </Box>
-          </Box>
-        ))}
+          );
+        })}
       </Paper>
 
       {/* DETAILS DIALOG */}
@@ -343,93 +476,274 @@ export default function TrafficSignals() {
                 {active ? active.name : ""}
               </Typography>
               <Typography sx={{ fontSize: 12, color: "#6b6b6b" }}>
-                {active ? `${active.id} • Last update: ${active.updated}` : ""}
+                {active && hasDataHistory(active) 
+                  ? `${active.id} • Data Set ${active.currentIndex + 1} of ${active.dataHistory.length} • Auto-cycling`
+                  : active ? `${active.id} • Static data` : ""
+                }
               </Typography>
             </Box>
           </Box>
 
-          <IconButton onClick={handleCloseDetails} size="large">
-            <Close />
-          </IconButton>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+         
+            <IconButton onClick={handleCloseDetails} size="large">
+              <Close />
+            </IconButton>
+          </Box>
         </DialogTitle>
 
-       <DialogContent dividers sx={{ bgcolor: "#fbfcfe", px: 3, py: 3 }}>
-  <Grid container spacing={3}>
-    {/* Left: camera snapshot */}
-    <Box style={{width:'45%'}}>
-      <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid rgba(0,0,0,0.04)" }}>
-        <Box
-          component="img"
-          src={active ? active.image : "https://via.placeholder.com/800x450?text=No+image"}
-          alt="live snapshot"
-          sx={{ width: "100%", height: 360, objectFit: "cover", display: "block" }}
+    <DialogContent dividers sx={{ bgcolor: "#fbfcfe", px: 3, py: 3 }}>
+  <div className="flex gap-6 h-96">
+    {/* Left side - Image (70%) */}
+    <motion.div 
+      className="w-[70%] relative"
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="relative h-80 rounded-xl overflow-hidden border border-gray-200 shadow-lg">
+        <img
+          src={active ? getCurrentData(active).image || "https://via.placeholder.com/800x450?text=No+image" : "https://via.placeholder.com/800x450?text=No+image"}
+          alt="traffic snapshot"
+          className="w-full h-full object-cover"
         />
-      </Paper>
+        
+        {/* Image overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+      </div>
+      
+      {/* Camera info below image */}
+      <motion.div
+        className="mt-3 flex gap-2 flex-wrap"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <div className="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-700 border">
+          Camera IP: {active?.cameraIP || "-"}
+        </div>
+        <div className="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-700 border">
+          {active && hasDataHistory(active) 
+            ? `Timestamp: ${getCurrentData(active).timestamp}`
+            : `Lat: ${active?.latitude || "-"} • Lon: ${active?.longitude || "-"}`
+          }
+        </div>
+      </motion.div>
+    </motion.div>
 
-      <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
-        <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
-          Camera IP: {active ? active.cameraIP : "-"}
-        </Button>
-        <Button variant="outlined" disabled sx={{ borderColor: "#e6e6e6" }}>
-          Lat: {active ? active.latitude || "-" : "-"} • Lon: {active ? active.longitude || "-" : "-"}
-        </Button>
-      </Box>
-    </Box>
+    {/* Right side - Traffic Lights and Stats (30%) */}
+    <motion.div 
+      className="w-[30%] h-80 flex flex-col justify-between"
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+    >
+      {/* Header */}
+      <div className="mb-3">
+        <h3 className="font-bold text-sm text-gray-800 font-['Poppins']">
+          Signal Metrics
+        </h3>
+       
+      </div>
 
-    {/* Right: professional stats card */}
-    <Grid item xs={12} md={6}>
-      <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid rgba(0,0,0,0.04)", height: "100%" }}>
-        <Typography sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, mb: 1 }}>Signal Metrics</Typography>
-        <Typography sx={{ fontSize: 13, color: "#607083", mb: 2 }}>Counts and current vehicle load</Typography>
+      {/* Traffic Lights */}
+      {active && (
+        <div className="flex-1 flex flex-col justify-center items-center space-y-4">
+          {/* Red Light */}
+          <motion.div
+            className="flex flex-col items-center"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+          >
+            <motion.div
+              className="w-12 h-12 rounded-full border-3 border-gray-800 bg-red-500 relative overflow-hidden shadow-lg"
+              animate={{
+                opacity: [1, 0.4, 1],
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 15px rgba(239, 68, 68, 0.5)",
+                  "0 0 25px rgba(239, 68, 68, 0.8)",
+                  "0 0 15px rgba(239, 68, 68, 0.5)"
+                ]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              {/* Inner shine effect */}
+              <motion.div
+                className="absolute inset-1.5 rounded-full bg-white opacity-30"
+                animate={{
+                  scale: [0.8, 1, 0.8],
+                  opacity: [0.3, 0.6, 0.3]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+            <span className="mt-1 text-lg font-bold text-red-600">
+              {getCurrentData(active).stats.red}
+            </span>
+          </motion.div>
 
-        <Stack spacing={2}>
-          <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Red Light Count</Typography>
-            <Typography sx={{ fontWeight: 700, color: statusColor.red, fontSize: 20 }}>
-              {active ? active.stats.red : "-"}
-            </Typography>
-          </Box>
+          {/* Yellow Light */}
+          <motion.div
+            className="flex flex-col items-center"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+          >
+            <motion.div
+              className="w-12 h-12 rounded-full border-3 border-gray-800 bg-yellow-400 relative overflow-hidden shadow-lg"
+              animate={{
+                opacity: [1, 0.4, 1],
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 15px rgba(251, 191, 36, 0.5)",
+                  "0 0 25px rgba(251, 191, 36, 0.8)",
+                  "0 0 15px rgba(251, 191, 36, 0.5)"
+                ]
+              }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.3
+              }}
+            >
+              {/* Inner shine effect */}
+              <motion.div
+                className="absolute inset-1.5 rounded-full bg-white opacity-30"
+                animate={{
+                  scale: [0.8, 1, 0.8],
+                  opacity: [0.3, 0.6, 0.3]
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+            <span className="mt-1 text-lg font-bold text-yellow-600">
+              {getCurrentData(active).stats.yellow || 0}
+            </span>
+          </motion.div>
 
-          <Divider />
+          {/* Green Light */}
+          <motion.div
+            className="flex flex-col items-center"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+          >
+            <motion.div
+              className="w-12 h-12 rounded-full border-3 border-gray-800 bg-green-500 relative overflow-hidden shadow-lg"
+              animate={{
+                opacity: [1, 0.4, 1],
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 15px rgba(34, 197, 94, 0.5)",
+                  "0 0 25px rgba(34, 197, 94, 0.8)",
+                  "0 0 15px rgba(34, 197, 94, 0.5)"
+                ]
+              }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.6
+              }}
+            >
+              {/* Inner shine effect */}
+              <motion.div
+                className="absolute inset-1.5 rounded-full bg-white opacity-30"
+                animate={{
+                  scale: [0.8, 1, 0.8],
+                  opacity: [0.3, 0.6, 0.3]
+                }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+            <span className="mt-1 text-lg font-bold text-green-600">
+              {getCurrentData(active).stats.green}
+            </span>
+          </motion.div>
+        </div>
+      )}
 
-          <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Green Light Count</Typography>
-            <Typography sx={{ fontWeight: 700, color: statusColor.green, fontSize: 20 }}>
-              {active ? active.stats.green : "-"}
-            </Typography>
-          </Box>
-
-          <Divider />
-
-          <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>Vehicles Present</Typography>
-            <Typography sx={{ fontWeight: 700, color: "#222", fontSize: 22 }}>
-              {active ? active.stats.vehicles : "-"}
-            </Typography>
-            <Typography sx={{ fontSize: 12, color: "#6b6b6b", mt: 0.5 }}>
-              Congestion: {active ? `${Math.min(100, Math.round((active.stats.vehicles / 300) * 100))}%` : "-"}
-            </Typography>
-          </Box>
-        </Stack>
-
-        <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-          <Button variant="contained" sx={{ bgcolor: "#4B0082" }}>
-            Acknowledge
-          </Button>
-          <Button variant="outlined">Dispatch Patrol</Button>
-        </Box>
-      </Paper>
-    </Grid>
-  </Grid>
+      {/* Vehicle Count at Bottom */}
+      {active && (
+        <motion.div
+          className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="text-center">
+            <h4 className="font-bold text-xs text-gray-700 mb-1">Vehicles Present</h4>
+            <motion.span 
+              className="text-2xl font-bold text-gray-800"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {getCurrentData(active).stats.vehicles}
+            </motion.span>
+            <div className="mt-2">
+              <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                <span>Congestion</span>
+                <span>{Math.min(100, Math.round((getCurrentData(active).stats.vehicles / 300) * 100))}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <motion.div
+                  className="bg-gradient-to-r from-green-400 to-red-500 h-1.5 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ 
+                    width: `${Math.min(100, Math.round((getCurrentData(active).stats.vehicles / 300) * 100))}%` 
+                  }}
+                  transition={{ duration: 1, delay: 1 }}
+                />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  </div>
 </DialogContent>
 
-
         <DialogActions sx={{ px: 3, py: 2 }}>
+           
+                  {active && hasDataHistory(active) ? (
+                    <Button 
+                      variant="contained" 
+                      sx={{ bgcolor: "#4B0082" }}
+                      onClick={() => handleOpenDetails(active)}
+                    >
+                      Manual Cycle
+                    </Button>
+                  ) : (
+                    <Button variant="contained" sx={{ bgcolor: "#4B0082" }}>
+                      Acknowledge
+                    </Button>
+                  )}
+                  <Button variant="outlined">Export Data</Button>
+                
           <Button onClick={handleCloseDetails}>Close</Button>
         </DialogActions>
       </Dialog>
 
-      {/* ADD SIGNAL DIALOG */}
+      {/* ADD SIGNAL DIALOG - Same as before */}
       <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="sm">
         <DialogTitle sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700 }}>Add / Activate Signal</DialogTitle>
         <DialogContent dividers>

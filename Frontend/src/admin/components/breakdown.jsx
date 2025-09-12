@@ -90,8 +90,8 @@ const initialBreakdowns = (() => {
       owner: "Ravi Kumar",
       registration: "DL1H-AA-1234",
       contact: "+91 98765 43210",
-      snapshot: "https://via.placeholder.com/900x560?text=Breakdown+Snapshot+1",
-      videos: ["https://www.w3schools.com/html/mov_bbb.mp4", "https://www.w3schools.com/html/movie.mp4"],
+      snapshot: "/traffic/break.png",
+      videos: ["/traffic/Vehicle Breakdown.mp4", " /traffic/Vehicle Breakdown.mp4",],
     },
     {
       id: "BD-202",
