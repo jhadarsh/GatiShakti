@@ -49,10 +49,10 @@ const sampleBusViolations = [
     time: timeStr,
     driver: "Ramesh Kumar",
     vehicleNumber: "DL1H-AA-1234",
-    image: "https://via.placeholder.com/900x560?text=Violation+Snapshot+1",
+    image: "/traffic/bus.png",
     videos: [
-      "https://www.w3schools.com/html/mov_bbb.mp4",
-      "https://www.w3schools.com/html/movie.mp4",
+      "/traffic/bus.mp4",
+      "/traffic/bus.mp4",,
     ],
   },
   {
@@ -80,10 +80,10 @@ const samplePvtViolations = [
     time: timeStr,
     owner: "Anita Verma",
     vehicleNumber: "DL2C-CC-9876",
-    image: "https://via.placeholder.com/900x560?text=Violation+Snapshot+3",
+    image: "/traffic/car.png",
     videos: [
-      "https://www.w3schools.com/html/mov_bbb.mp4",
-      "https://www.w3schools.com/html/movie.mp4",
+       "/traffic/car.mp4",,
+      "/traffic/car.mp4",,
     ],
   },
   {
