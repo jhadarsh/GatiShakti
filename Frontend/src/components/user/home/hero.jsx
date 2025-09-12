@@ -31,12 +31,12 @@ const Hero = () => {
     <section className="relative w-full h-[500px] bg-white overflow-hidden flex items-center justify-center">
       
       {/* Diagonal Purple Background */}
-   <div
-  className="absolute top-0 left-0 w-[50%] h-full z-0 bg-gradient-to-br from-slate-900 via-indigo-800 to-emerald-500"
-  style={{
-    clipPath: "polygon(0 0, 0 100%, 100% 100%)",
-  }}
->
+      <div
+      className="absolute top-0 left-0 w-[50%] h-full z-0 bg-gradient-to-r from-[#736278] via-[#3730a3] to-[#10b981]"
+      style={{
+      clipPath: "polygon(0 0, 0 100%, 100% 100%)",
+      }}
+      >
 
         
         {/* Blinking Red Light and Number */}
@@ -76,21 +76,21 @@ const Hero = () => {
 
       {/* Animated Car Image moving diagonally */}
       <motion.img
-        src={CarImage}
-        alt="Car"
-        className="absolute z-10 w-[450px] h-auto "
-        initial={{ x: -100, y: -50 }}
-        animate={{ x: 300, y: 300 }}
-        transition={{
-          duration: 5,
-          ease: "easeInOut",
-          repeat: Infinity,
-        }}
-        style={{
-          top: 2,
-          left: 0,
-        }}
-      />
+        src={CarImage}
+        alt="Car"
+        className="absolute z-10 w-[450px] h-auto "
+        initial={{ x: -100, y: -50 }}
+        animate={{ x: 300, y: 300 }}
+        transition={{
+          duration: 3,
+          ease: "easeInOut",
+         repeat: 0,
+          }}
+          style={{
+             top: 2,
+ left: 0,
+}}
+/>
 
       {/* Main Content */}
       <div className="relative mb-40 z-20 w-full flex flex-col items-center justify-center text-center px-4">

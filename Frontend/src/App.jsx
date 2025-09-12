@@ -4,6 +4,9 @@ import Landing from './pages/user/Landing';
 import StationDashboard from "./pages/user/ShowSlots";
 import AdminLayout from "./admin/Dashboard/layout";
 import ComplaintForm from "./pages/user/Reporting";
+import Footer from "./components/user/common/Footer";
+import About from "./components/user/common/About";
+import ContactUs from "./components/user/common/ContactUs";
 
 function App() {
   return (
@@ -28,11 +31,12 @@ function MainLayout() {
         <Route path="/slots" element={<StationDashboard />} />
         <Route path="/admin/*" element={<AdminLayout />} />
         <Route path="/reporting" element={<ComplaintForm />} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/contact" element={<ContactUs/>} />
+
       </Routes>
 
-      {!hideLayout && <footer className="bg-gray-900 text-white p-4 text-center">
-        Footer content here
-      </footer>}
+      {!hideLayout && <Footer/>}
     </>
   );
 }
