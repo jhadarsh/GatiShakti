@@ -1,0 +1,74 @@
+ <Paper className="map-container" elevation={0} sx={{ position: "relative", width: "100%", height: { xs: 520, md: 760 } }}>
+        <Box
+          component="img"
+          src="/DelhiMap.png"
+          alt="Delhi Map"
+          sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "contrast(0.98) saturate(0.98)" }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: 18,
+            left: 18,
+            bgcolor: "rgba(255,255,255,0.9)",
+            borderRadius: 10,
+            p: 1.25,
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+            boxShadow: "0 8px 24px rgba(12,20,40,0.06)",
+            border: "1px solid rgba(0,0,0,0.04)",
+          }}
+        >
+          <Avatar sx={{ bgcolor: "#4B0082", width: 38, height: 38 }}>
+            <VideocamIcon />
+          </Avatar>
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>Smart Surveillance</Typography>
+            <Typography sx={{ fontSize: 12, color: "#596a7a" }}>Auto-cycling data • Click for manual control</Typography>
+          </Box>
+        </Box>
+
+        {/* Markers */}
+        {signals.map((s) => {
+          const displayData = getDisplayData(s);
+          const isAutoCycling = hasDataHistory(s);
+          
+          return (
+            <Box
+              key={s.id}
+              className="signal-marker"
+              sx={{ top: s.top, left: s.left }}
+              onClick={() => handleOpenDetails(s)}
+            >
+              <Box className="pulse" sx={{ bgcolor: statusColor[s.status] }} />
+              <Tooltip 
+                title={`${s.name} — ${s.id} ${isAutoCycling ? '(Auto-cycling every ' + (s.greenInterval/1000) + 's)' : ''}`} 
+                placement="top"
+              >
+                <Box 
+                  className={`signal-bubble ${isAutoCycling ? 'auto-cycling' : ''}`} 
+                  sx={{ width: 62, height: 62, borderRadius: 14 }}
+                >
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    badgeContent={<Box sx={{ width: 12, height: 12, bgcolor: statusColor[s.status], borderRadius: "50%", border: "2px solid white" }} />}
+                  >
+                    <Avatar sx={{ bgcolor: "#fff", color: "#333", width: 46, height: 46, border: "1px solid rgba(0,0,0,0.04)" }}>
+                      <VideocamIcon sx={{ fontSize: 20, color: "#333" }} />
+                    </Avatar>
+                  </Badge>
+                </Box>
+              </Tooltip>
+              <Box className="marker-label">
+                <Typography sx={{ fontSize: 12, fontWeight: 700 }}>
+                  {s.id}
+                  {isAutoCycling && <span style={{ color: '#4B0082' }}> ●</span>}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        })}
+      </Paper> 
