@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PublicComplaints from "./Complains"; // you will import your component
+import PublicComplaints from "./Complains";
 
 export default function ComplaintForm() {
   const [form, setForm] = useState({
@@ -9,6 +9,7 @@ export default function ComplaintForm() {
     description: "",
     location: "",
   });
+
   const [files, setFiles] = useState([]);
 
   const handleChange = (e) => {
@@ -35,96 +36,193 @@ export default function ComplaintForm() {
 
     if (res.ok) {
       alert("Complaint submitted successfully!");
-      window.location.reload(); // ✅ reloads the whole page
+      window.location.reload();
     } else {
       alert("Failed to submit complaint.");
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left: Complaint Form */}
-      <div className="bg-white shadow-lg rounded-2xl p-6">
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-          Report an Issue
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#060b14",
+        color: "#e8f0ff",
+        padding: "100px 40px 40px",
+        marginTop : "-80px",
+      }}
+    >
+      {/* GRID BACKGROUND */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundImage:
+            "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)",
+          backgroundSize: "56px 56px",
+          zIndex: 0,
+        }}
+      />
 
-          <input
-            type="text"
-            name="contact"
-            placeholder="Contact (Email/Phone)"
-            value={form.contact}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-          />
-
-          <select
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "grid",
+          gridTemplateColumns: "1fr 1.2fr",
+          gap: 24,
+          maxWidth: 1300,
+          margin: "0 auto",
+        }}
+      >
+        {/* 🔵 LEFT: FORM */}
+        <div
+          style={{
+            background: "rgba(12,21,38,0.9)",
+            border: "1px solid rgba(0,229,255,0.12)",
+            borderRadius: 20,
+            padding: 24,
+            backdropFilter: "blur(16px)",
+            boxShadow: "0 0 40px rgba(0,229,255,0.08)",
+            animation: "fadeUp 0.6s ease",
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: "Syne",
+              fontWeight: 700,
+              marginBottom: 20,
+            }}
           >
-            <option value="">Select Issue Category</option>
-            <option value="Traffic Jam">Traffic Jam</option>
-            <option value="Potholes">Potholes</option>
-            <option value="Water Logging">Water Logging</option>
-            <option value="Broken Signals">Broken Signals</option>
-            <option value="Encroachment">Encroachment</option>
-            <option value="Others">Others</option>
-          </select>
+            🚨 Report an Issue
+          </h2>
 
-          <textarea
-            name="description"
-            placeholder="Describe the issue"
-            value={form.description}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            rows="4"
-            required
-          />
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {[
+              { name: "name", placeholder: "Your Name" },
+              { name: "contact", placeholder: "Contact (Email/Phone)" },
+              { name: "location", placeholder: "Location / Address" },
+            ].map((field) => (
+              <input
+                key={field.name}
+                type="text"
+                name={field.name}
+                value={form[field.name]}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                required={field.name !== "contact"}
+                style={inputStyle}
+              />
+            ))}
 
-          <input
-            type="text"
-            name="location"
-            placeholder="Location / Address"
-            value={form.location}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+            {/* CATEGORY */}
+            <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            >
+              <option value="">Select Issue Category</option>
+              <option>Traffic Jam</option>
+              <option>Potholes</option>
+              <option>Water Logging</option>
+              <option>Broken Signals</option>
+              <option>Encroachment</option>
+              <option>Others</option>
+            </select>
 
-          <input
-            type="file"
-            multiple
-            onChange={handleFileChange}
-            className="w-full"
-            accept="image/*"
-          />
+            {/* DESCRIPTION */}
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Describe the issue..."
+              rows="4"
+              required
+              style={inputStyle}
+            />
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-          >
-            Submit Complaint
-          </button>
-        </form>
+            {/* FILE INPUT */}
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ fontSize: 12 }}
+            />
+
+            {/* PREVIEW */}
+            {files.length > 0 && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {files.map((file, i) => (
+                  <img
+                    key={i}
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    style={{
+                      width: 70,
+                      height: 70,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              style={{
+                background: "linear-gradient(135deg,#00e5ff,#008fb0)",
+                color: "#060b14",
+                padding: "12px",
+                borderRadius: 12,
+                fontWeight: 700,
+                cursor: "pointer",
+                border: "none",
+                transition: "0.3s",
+              }}
+              onMouseEnter={(e) =>
+                (e.target.style.boxShadow = "0 10px 30px rgba(0,229,255,0.4)")
+              }
+              onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+            >
+              Submit Complaint →
+            </button>
+          </form>
+        </div>
+
+        {/* 🟡 RIGHT: COMPLAINT LIST */}
+        <div
+          style={{
+            height: "100vh",
+            overflowY: "hidden",
+            paddingRight: 6,
+            animation: "fadeUp 0.8s ease",
+          }}
+        >
+          <PublicComplaints />
+        </div>
       </div>
 
-      {/* Right: Public Complaints */}
-      <div className="h-[80vh] overflow-y-auto pr-2">
-        <PublicComplaints />
-      </div>
+      {/* ANIMATION */}
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
+
+const inputStyle = {
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(0,229,255,0.15)",
+  borderRadius: "12px",
+  padding: "12px",
+  color: "#e8f0ff",
+  outline: "none",
+};

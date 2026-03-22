@@ -1,16 +1,13 @@
 import Banner from "../../components/user/home/Banner";
 import Hero from "../../components/user/home/hero";
-import TripPlanner from "../../components/user/home/plan";
-import NoticeBar from "../../components/user/home/NoticeBar";
+import WhatWeProvide from "../../components/user/home/WhatWeProvide";
  
 export default function Landing() {
     return(
-        <>
-        <Hero/>   
-        <NoticeBar/>    
-        {/* <Banner/> */}
-        <TripPlanner/>
-
-        </>
+        <div style={{ background: "#08101e" }}>
+      <Hero />
+      <Banner/>
+      <WhatWeProvide />
+    </div>
     )
 }

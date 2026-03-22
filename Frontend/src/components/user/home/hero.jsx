@@ -1,46 +1,20 @@
 // Hero.jsx
 import React, { useEffect, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
-import CarImage from "../../../assets/user/Car.png"; // Your car image
+import { motion } from "framer-motion";
+import CarImage from "../../../assets/user/Car.png";
 
 const Hero = () => {
-  const [number, setNumber] = useState(0);
+  const redTime = 45;
+  const yellowTime = 5;
+  const greenTime = 30;
+  const densityTarget = 120;
 
-  useEffect(() => {
-    let start = 0;
-    let end = 3240;
-    let duration = 5000; // match car animation (5s)
-    let frameRate = 1000 / 60; // 60fps
-    let totalFrames = duration / frameRate;
-    let counter = 0;
-
-    const interval = setInterval(() => {
-      counter++;
-      const progress = counter / totalFrames;
-      const current = Math.floor(progress * end);
-      setNumber(current > end ? end : current);
-      if (counter >= totalFrames) {
-        counter = 0;
-      }
-    }, frameRate);
-
-    return () => clearInterval(interval);
-  }, []);
-
-    // Hardcoded data
-  const redTime = 45;    // seconds
-  const yellowTime = 5;  // seconds
-  const greenTime = 30;  // seconds
-  const densityTarget = 120; // cars
-
-  // State for animated count
   const [density, setDensity] = useState(0);
 
   useEffect(() => {
     let start = 0;
-    const duration = 1500; // 1.5s animation
+    const duration = 1500;
     const increment = Math.ceil(densityTarget / (duration / 30));
-
     const interval = setInterval(() => {
       start += increment;
       if (start >= densityTarget) {
@@ -50,132 +24,205 @@ const Hero = () => {
         setDensity(start);
       }
     }, 30);
-
     return () => clearInterval(interval);
   }, [densityTarget]);
 
   return (
-    <section className="relative w-full h-[500px] bg-white overflow-hidden flex items-center justify-center">
-      
-      {/* Diagonal Purple Background */}
+    <section
+      className="relative w-full overflow-hidden flex flex-col -mt-32 pt-24"
+      style={{ minHeight: "650px", background: "#08101e" }}
+    >
+      {/* Top fade for navbar blend */}
+ 
+      {/* ── Grid Background ── */}
       <div
-      className="absolute top-0 left-0 w-[50%] h-full z-0 bg-gradient-to-r from-[#736278] via-[#3730a3] to-[#10b981]"
-      style={{
-      clipPath: "polygon(0 0, 0 100%, 100% 100%)",
-      }}
-      >
-
-        
-        {/* Blinking Red Light and Number */}
-     <div className="absolute bottom-0 mb-4 left-8 flex flex-col gap-3 bg-white/20 backdrop-blur-md p-3 rounded-lg shadow-md border border-white/30 z-[9999]">
-  {/* Red Light */}
-  <div className="flex items-center gap-3">
-    <div className="w-4 h-4 rounded-full bg-red-500 animate-ping" />
-    <div className="text-white text-sm font-semibold">
-      Next Red: <span className="text-red-400">{redTime}s</span>
-    </div>
-  </div>
-
-  {/* Yellow Light */}
-  <div className="flex items-center gap-3">
-    <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse" />
-    <div className="text-white text-sm font-semibold">
-      Next Yellow: <span className="text-yellow-300">{yellowTime}s</span>
-    </div>
-  </div>
-
-  {/* Green Light */}
-  <div className="flex items-center gap-3">
-    <div className="w-4 h-4 rounded-full bg-green-500 animate-bounce" />
-    <div className="text-white text-sm font-semibold">
-      Next Green: <span className="text-green-300">{greenTime}s</span>
-    </div>
-  </div>
-
-  {/* Traffic Density */}
-  <div className="flex items-center gap-3 border-t border-white/30 pt-2">
-    <div className="w-4 h-4 rounded-full bg-blue-500 shadow-sm shadow-blue-400" />
-    <div className="text-white text-sm font-semibold">
-      Density: <span className="text-blue-300">{density}</span> cars
-    </div>
-  </div>
-</div>
-
-
-      </div>
-
-      {/* Road image along car path */}
-      <div
-        className="absolute z-5"
+        className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          width: "810px", 
-          height: "150px",
-          top: "calc(60% - 305px )",
-          left: "calc(50% - 635px)",
-          transform: "rotate(38.5deg)",
-          transformOrigin: "top left",
-          overflow: "visible",
-          pointerEvents: "none",
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)
+          `,
+          backgroundSize: "56px 56px",
         }}
-      >
-        <img
-          src="https://t4.ftcdn.net/jpg/06/03/50/63/360_F_603506362_EmGPA1cjaRZZAsxxwVMESOx4EtFc0xQK.jpg"
-          alt="Road"
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-      </div>
+      />
 
-      {/* Animated Car Image moving diagonally */}
-      <motion.img
-        src={CarImage}
-        alt="Car"
-        className="absolute z-10 w-[450px] h-auto "
-        initial={{ x: -100, y: -50 }}
-        animate={{ x: 300, y: 300 }}
-        transition={{
-          duration: 3,
-          ease: "easeInOut",
-         repeat: 0,
-          }}
+      {/* ── Corner vignette fades so grid fades at edges ── */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse 55% 55% at 0% 0%,   rgba(8,16,30,0.96) 0%, transparent 65%),
+            radial-gradient(ellipse 55% 55% at 100% 0%,  rgba(8,16,30,0.96) 0%, transparent 65%),
+            radial-gradient(ellipse 55% 55% at 0% 100%,  rgba(8,16,30,0.96) 0%, transparent 65%),
+            radial-gradient(ellipse 55% 55% at 100% 100%,rgba(8,16,30,0.96) 0%, transparent 65%)
+          `,
+        }}
+      />
+
+      {/* ══════════════════════════════
+           UPPER SECTION — hero content
+         ══════════════════════════════ */}
+      <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 pt-10 pb-6 flex-1">
+
+        {/* Badge */}
+        <motion.div
+          className="flex items-center gap-2 px-4 py-1.5 rounded-full border mb-8"
           style={{
-             top: 2,
- left: 0,
-}}
-/>
-
-      {/* Main Content */}
-      <div className="relative mb-40 z-20 w-full flex flex-col items-center justify-center text-center px-4">
-        <motion.h1
-          className="text-3xl md:text-5xl font-bold text-gray-900 max-w-2xl"
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+            borderColor: "rgba(6,182,212,0.5)",
+            background: "rgba(6,182,212,0.07)",
+            backdropFilter: "blur(8px)",
+          }}
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          Accelerate smarter journeys with{" "}
-          <span className="text-indigo-800">Gati</span>
-          <span className="text-green-600">Shakti</span>
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: "#22d3ee", boxShadow: "0 0 8px #22d3ee" }}
+          />
+          <span
+            className="text-xs font-mono uppercase"
+            style={{ color: "#22d3ee", letterSpacing: "0.18em" }}
+          >
+            System Online · V2.4.1
+          </span>
+        </motion.div>
+
+        {/* Line 1: "Accelerate" — white */}
+        <motion.h1
+          style={{
+            fontSize: "clamp(2.8rem, 6.5vw, 5rem)",
+            fontFamily: "'Georgia', 'Times New Roman', serif",
+            fontWeight: 800,
+            color: "#f1f5f9",
+            lineHeight: 1.08,
+            letterSpacing: "-0.02em",
+            margin: 0,
+          }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.1, ease: "easeOut" }}
+        >
+          Accelerate
         </motion.h1>
 
-        <motion.p
-          className="mt-6 text-base md:text-lg text-gray-600 max-w-xl"
-          initial={{ opacity: 0, y: 30 }}
+        {/* Line 2: "Smarter" cyan + "Cities" amber */}
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-x-4"
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.85, delay: 0.22, ease: "easeOut" }}
         >
-          Empowering cities with intelligent traffic management and seamless
-          transport solutions for a faster, smarter future.
+          <span
+            style={{
+              fontSize: "clamp(2.8rem, 6.5vw, 5rem)",
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontWeight: 800,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
+              color: "#22d3ee",
+            }}
+          >
+            Smarter
+          </span>
+          <span
+            style={{
+              fontSize: "clamp(2.8rem, 6.5vw, 5rem)",
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontWeight: 800,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
+              color: "#f59e0b",
+            }}
+          >
+            Cities
+          </span>
+        </motion.div>
+
+        {/* Subtitle */}
+        <motion.p
+          style={{
+            marginTop: "1.5rem",
+            maxWidth: "600px",
+            fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)",
+            fontFamily: "'Georgia', 'Times New Roman', serif",
+            fontStyle: "italic",
+            color: "#94a3b8",
+            lineHeight: 1.75,
+          }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.35, ease: "easeOut" }}
+        >
+          GatiShakti empowers municipalities with real-time intelligence —
+          reducing congestion, cutting emissions, and giving every commuter
+          their time back.
         </motion.p>
 
-        <div className="mt-6 flex gap-4 flex-wrap justify-center">
-          <button className="bg-gradient-to-br from-slate-900 via-indigo-800 to-emerald-500 text-white px-6 py-2 rounded-full hover:bg-purple-800 transition">
-            Get Started
+        {/* Buttons */}
+        <motion.div
+          className="flex items-center gap-3 flex-wrap justify-center"
+          style={{ marginTop: "2rem" }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.48, ease: "easeOut" }}
+        >
+          <button
+            className="flex items-center gap-2 font-semibold transition-all hover:scale-105"
+            style={{
+              background: "#f1f5f9",
+              color: "#08101e",
+              padding: "0.65rem 1.8rem",
+              borderRadius: "9999px",
+              fontSize: "0.95rem",
+              border: "none",
+              cursor: "pointer",
+              boxShadow: "0 2px 24px rgba(241,245,249,0.12)",
+            }}
+          >
+            Get Started <span>→</span>
           </button>
-          <button className="border border-purple-700 text-purple-700 px-6 py-2 rounded-full hover:bg-purple-50 transition">
-            Learn More
+
+          <button
+            className="flex items-center justify-center transition-all hover:scale-110"
+            style={{
+              width: "42px",
+              height: "42px",
+              borderRadius: "9999px",
+              border: "1.5px solid rgba(148,163,184,0.35)",
+              background: "rgba(148,163,184,0.1)",
+              color: "#94a3b8",
+              fontSize: "1.1rem",
+              cursor: "pointer",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            ↓
           </button>
-        </div>
+
+          <button
+            className="font-semibold transition-all hover:scale-105"
+            style={{
+              background: "rgba(241,245,249,0.07)",
+              color: "#f1f5f9",
+              padding: "0.65rem 1.8rem",
+              borderRadius: "9999px",
+              fontSize: "0.95rem",
+              border: "1.5px solid rgba(241,245,249,0.18)",
+              cursor: "pointer",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            Watch Demo
+          </button>
+        </motion.div>
       </div>
+
+    
+
+        {/* ── Animated Car — loops left → right across bottom strip ── */}
+     
+      
     </section>
   );
 };

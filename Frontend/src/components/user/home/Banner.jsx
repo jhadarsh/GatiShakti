@@ -1,5 +1,5 @@
 import React from "react";
-import banner from "../../../assets/user/banner.png";
+import banner from "../../../assets/user/testingb.png";
 
 const Banner = ({ altText = "Banner" }) => {
   return (

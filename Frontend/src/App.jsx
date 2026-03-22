@@ -9,6 +9,7 @@ import About from "./components/user/common/About";
 import ContactUs from "./components/user/common/ContactUs";
 import Guide from "./components/user/home/Guide";
 import ParkingDashboard from "./pages/user/ParkingBookingPage";
+import PlanJourney from "./pages/user/Planjourney ";
 function App() {
   return (
     <Router>
@@ -29,6 +30,7 @@ function MainLayout() {
       
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/plan" element={<PlanJourney />} />
         <Route path="/slots" element={<ParkingDashboard />} />
         <Route path="/admin/*" element={<AdminLayout />} />
         <Route path="/reporting" element={<ComplaintForm />} />
