@@ -103,7 +103,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, delay: 0.1, ease: "easeOut" }}
         >
-          Accelerate
+          Accelerates
         </motion.h1>
 
         {/* Line 2: "Smarter" cyan + "Cities" amber */}
