@@ -43,7 +43,7 @@ def predict_and_mark(image_bytes):
         label = f"Normal Road ({confidence*100:.2f}%)"
         color = (0, 255, 0)  # Green
 
-    # Draw label + box
+    # Draw label + box m
     cv2.putText(img, label, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color, 3)
     cv2.rectangle(img, (10, 60), (img.shape[1]-10, img.shape[0]-10), color, 3)
 

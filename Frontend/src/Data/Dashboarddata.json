@@ -1,0 +1,214 @@
+{
+  "kpis": {
+    "cameras": { "value": 124, "trend": "+4", "direction": "up" },
+    "lanes": { "value": 320, "trend": "+12", "direction": "up" },
+    "dailyTraffic": { "value": "2.4M", "trend": "+6%", "direction": "up" },
+    "compliance": { "value": "86%", "trend": "+2%", "direction": "up" },
+    "accidentsPrevented": { "value": 312, "trend": "+38", "direction": "up" },
+    "potholesFixed": { "value": 58, "trend": "-3", "direction": "down" }
+  },
+
+  "trafficTrend": [
+    { "day": "Mon", "volume": 2100000 },
+    { "day": "Tue", "volume": 2300000 },
+    { "day": "Wed", "volume": 2500000 },
+    { "day": "Thu", "volume": 2400000 },
+    { "day": "Fri", "volume": 2600000 }
+  ],
+
+  "complianceData": [
+    { "name": "Compliant", "value": 86 },
+    { "name": "Violations", "value": 14 }
+  ],
+
+  "activityFeed": [
+    { "id": 1, "text": "Camera #1023 calibrated successfully", "time": "5 mins ago", "type": "info" },
+    { "id": 2, "text": "Pothole fixed at Sector 44, Gurgaon", "time": "25 mins ago", "type": "success" },
+    { "id": 3, "text": "Traffic compliance reached 90% peak today", "time": "2 hrs ago", "type": "info" },
+    { "id": 4, "text": "New AI camera installed at Ring Road", "time": "4 hrs ago", "type": "warning" },
+    { "id": 5, "text": "Vehicle breakdown reported on NH-48", "time": "5 hrs ago", "type": "error" }
+  ],
+
+  "zoneStatus": [
+    { "id": 1, "zone": "Ring Road North", "cameras": 18, "status": "Online" },
+    { "id": 2, "zone": "Sector 44 Gurugram", "cameras": 12, "status": "Online" },
+    { "id": 3, "zone": "NH-48 Corridor", "cameras": 22, "status": "Partial" },
+    { "id": 4, "zone": "Dwarka Expressway", "cameras": 15, "status": "Online" },
+    { "id": 5, "zone": "Sarita Vihar", "cameras": 9, "status": "Offline" },
+    { "id": 6, "zone": "IGI Airport Zone", "cameras": 20, "status": "Online" }
+  ],
+
+  "trafficSignals": [
+    { "id": "TS-001", "location": "Ring Road & NH-8", "status": "Active", "mode": "Auto", "cycle": "90s", "violations": 12 },
+    { "id": "TS-002", "location": "Sector 44 Chowk", "status": "Active", "mode": "Manual", "cycle": "60s", "violations": 5 },
+    { "id": "TS-003", "location": "Dwarka Mor", "status": "Fault", "mode": "Auto", "cycle": "—", "violations": 0 },
+    { "id": "TS-004", "location": "IGI T3 Gate", "status": "Active", "mode": "Auto", "cycle": "75s", "violations": 3 },
+    { "id": "TS-005", "location": "Vasant Kunj South", "status": "Inactive", "mode": "—", "cycle": "—", "violations": 0 }
+  ],
+
+  "violations": [
+    { "id": "V-1021", "vehicle": "DL 4C AB 1234", "type": "Red Light Jump", "location": "Ring Road North", "time": "08:14 AM", "status": "Pending" },
+    { "id": "V-1022", "vehicle": "HR 26 DX 5678", "type": "Speeding", "location": "NH-48 Corridor", "time": "09:02 AM", "status": "Issued" },
+    { "id": "V-1023", "vehicle": "UP 14 CH 9999", "type": "Wrong Lane", "location": "Sector 44", "time": "09:45 AM", "status": "Pending" },
+    { "id": "V-1024", "vehicle": "DL 7S GH 3322", "type": "No Helmet", "location": "Dwarka Expressway", "time": "10:10 AM", "status": "Closed" },
+    { "id": "V-1025", "vehicle": "MH 01 BX 7890", "type": "Red Light Jump", "location": "IGI Airport Zone", "time": "11:30 AM", "status": "Issued" }
+  ],
+
+  "breakdowns": [
+    { "id": "BD-301", "vehicle": "DL 9A XY 1111", "type": "Car", "location": "Ring Road KM 14", "reportedAt": "07:30 AM", "status": "Resolved" },
+    { "id": "BD-302", "vehicle": "HR 55 ZZ 4421", "type": "Bus", "location": "NH-48 KM 22", "reportedAt": "08:55 AM", "status": "In Progress" },
+    { "id": "BD-303", "vehicle": "DL 3C TT 8800", "type": "Truck", "location": "Sarita Vihar Flyover", "reportedAt": "10:20 AM", "status": "Pending" }
+  ],
+
+  "potholes": [
+    { "id": "PH-501", "location": "Sector 44 Road", "severity": "High", "detectedAt": "2026-06-20", "status": "Fixed" },
+    { "id": "PH-502", "location": "Ring Road North", "severity": "Medium", "detectedAt": "2026-06-21", "status": "In Progress" },
+    { "id": "PH-503", "location": "Dwarka Expressway", "severity": "Low", "detectedAt": "2026-06-22", "status": "Pending" },
+    { "id": "PH-504", "location": "IGI Access Road", "severity": "High", "detectedAt": "2026-06-22", "status": "Pending" }
+  ],
+
+  "sewage": [
+    { "zone": "Zone A - Sector 44", "capacity": 85, "flowRate": "320 L/min", "alerts": 0, "status": "Normal" },
+    { "zone": "Zone B - Ring Road", "capacity": 92, "flowRate": "410 L/min", "alerts": 1, "status": "Warning" },
+    { "zone": "Zone C - Dwarka", "capacity": 60, "flowRate": "210 L/min", "alerts": 0, "status": "Normal" },
+    { "zone": "Zone D - Sarita Vihar", "capacity": 98, "flowRate": "510 L/min", "alerts": 2, "status": "Critical" }
+  ],
+  
+  "complaints": [
+    {
+      "_id": "6a2e50a30bac3605f8b006f1",
+      "category": "Potholes",
+      "description": "Large pothole causing traffic congestion near metro station, multiple vehicles have been damaged.",
+      "location": "Sector 62 Metro Station, Noida",
+      "status": "Pending",
+      "upvotes": 24,
+      "createdAt": "2026-06-20T08:30:00Z",
+      "user": { "name": "Ravi Sharma", "email": "ravi@example.com" },
+      "images": []
+    },
+    {
+      "_id": "6a2e50a30bac3605f8b006f2",
+      "category": "Traffic Jam",
+      "description": "Severe traffic jam every morning from 8–10 AM due to narrow road and encroachment.",
+      "location": "NH-48 Toll Plaza, Gurugram",
+      "status": "In Progress",
+      "upvotes": 58,
+      "createdAt": "2026-06-19T07:15:00Z",
+      "user": { "name": "Priya Singh", "email": "priya@example.com" },
+      "images": []
+    },
+    {
+      "_id": "6a2e50a30bac3605f8b006f3",
+      "category": "Water Logging",
+      "description": "Road completely flooded after last night's rain, water level knee-high near underpass.",
+      "location": "Minto Road Underpass, Delhi",
+      "status": "Resolved",
+      "upvotes": 41,
+      "createdAt": "2026-06-18T14:00:00Z",
+      "user": { "name": "Amit Verma", "email": "amit@example.com" },
+      "images": []
+    },
+    {
+      "_id": "6a2e50a30bac3605f8b006f4",
+      "category": "Broken Signals",
+      "description": "Traffic signal at the main junction has been non-functional for 3 days causing accidents.",
+      "location": "Rajpur Chowk, Ghaziabad",
+      "status": "Pending",
+      "upvotes": 19,
+      "createdAt": "2026-06-21T10:45:00Z",
+      "user": { "name": "Sunita Rao", "email": "sunita@example.com" },
+      "images": []
+    },
+    {
+      "_id": "6a2e50a30bac3605f8b006f5",
+      "category": "Encroachment",
+      "description": "Street vendors have occupied half the road near the market, blocking emergency vehicle access.",
+      "location": "Lajpat Nagar Market, Delhi",
+      "status": "In Progress",
+      "upvotes": 33,
+      "createdAt": "2026-06-17T09:20:00Z",
+      "user": { "name": "Deepak Jha", "email": "deepak@example.com" },
+      "images": []
+    },
+    {
+      "_id": "6a2e50a30bac3605f8b006f6",
+      "category": "Others",
+      "description": "Street lights not working on entire stretch for past 2 weeks making it unsafe at night.",
+      "location": "Sector 18, Noida",
+      "status": "Pending",
+      "upvotes": 12,
+      "createdAt": "2026-06-22T06:00:00Z",
+      "user": { "name": "Kavya Nair", "email": "kavya@example.com" },
+      "images": []
+    }
+  ],
+
+  "parkings": [
+    {
+      "_id": "pk001",
+      "name": "Connaught Place Parking",
+      "description": "Secure multi-level parking with 24/7 CCTV surveillance and security staff.",
+      "location": "Connaught Place, New Delhi",
+      "landmark": "Rajiv Chowk Metro Station",
+      "totalSlots": 200,
+      "availableSlots": 78,
+      "slotPrice": 50,
+      "createdAt": "2026-05-10T10:00:00Z",
+      "images": [],
+      "owner": { "name": "Delhi Parking Authority" }
+    },
+    {
+      "_id": "pk002",
+      "name": "Cyber Hub Smart Parking",
+      "description": "Automated parking with sensor-based slot detection and mobile app integration.",
+      "location": "DLF Cyber Hub, Gurugram",
+      "landmark": "Cyber City Metro Station",
+      "totalSlots": 350,
+      "availableSlots": 142,
+      "slotPrice": 80,
+      "createdAt": "2026-05-15T11:00:00Z",
+      "images": [],
+      "owner": { "name": "DLF Parking Pvt Ltd" }
+    },
+    {
+      "_id": "pk003",
+      "name": "Noida Sector 18 Parking",
+      "description": "Open and covered parking spaces available with EV charging stations.",
+      "location": "Sector 18, Noida",
+      "landmark": "Noida Sector 18 Metro",
+      "totalSlots": 150,
+      "availableSlots": 12,
+      "slotPrice": 30,
+      "createdAt": "2026-05-20T09:30:00Z",
+      "images": [],
+      "owner": { "name": "Noida Authority" }
+    },
+    {
+      "_id": "pk004",
+      "name": "IGI Airport P2 Parking",
+      "description": "Long-term and short-term parking with shuttle service to terminals.",
+      "location": "IGI Airport, New Delhi",
+      "landmark": "Terminal 3, IGI Airport",
+      "totalSlots": 500,
+      "availableSlots": 234,
+      "slotPrice": 120,
+      "createdAt": "2026-04-01T08:00:00Z",
+      "images": [],
+      "owner": { "name": "DIAL Parking" }
+    },
+    {
+      "_id": "pk005",
+      "name": "Select City Walk Parking",
+      "description": "Mall parking with 2-hour free parking for shoppers and easy in-out access.",
+      "location": "Saket District Centre, Delhi",
+      "landmark": "Saket Metro Station Gate 2",
+      "totalSlots": 450,
+      "availableSlots": 0,
+      "slotPrice": 40,
+      "createdAt": "2026-03-12T12:00:00Z",
+      "images": [],
+      "owner": { "name": "Select Malls Pvt Ltd" }
+    }
+  ]
+
+}

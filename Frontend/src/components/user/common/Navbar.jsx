@@ -1,190 +1,688 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { Menu, X, User, LogIn, UserPlus, Calendar , Shield } from "lucide-react";
+import { useAuth } from "../../../context/AuthContext"; // adjust path to match your structure
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const navigate = useNavigate();
+  // Mock auth state - replace with real auth later
+const { user, isAuthenticated, isAdmin, logout } = useAuth();
+
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-
-    // ⚡ ULTRA SMOOTH cursor tracking (no lag)
-    const handleMouseMove = (e) => {
-      if (glowRef.current) {
-        glowRef.current.style.transform = `translate(${e.clientX - 100}px, ${e.clientY - 100}px)`;
-      }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
+  // Close drawers on route change
+  useEffect(() => {
+    setIsProfileOpen(false);
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   const navLinks = [
-     { to: "/plan", label: "Plan Journeys" },
+    { to: "/plan", label: "Plan Journeys" },
     { to: "/reporting", label: "Complain" },
     { to: "/about", label: "About" },
   ];
 
   return (
     <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        width: "100%",
-        transition: "all 0.4s ease",
+      className={`
+        fixed
+        top-0
+        left-0
+        w-full
+        z-50
 
-        // 🔥 Premium glass + gradient blend
-        background: "linear-gradient(to bottom, rgba(8,16,30,0.95), rgba(8,16,30,0.4), transparent)",
+        transition-all
+        duration-500
 
-        backdropFilter: "blur(16px)",
-
-        borderBottom: scrolled
-          ? "1px solid rgba(34,211,238,0.2)"
-          : "1px solid transparent",
-
-        boxShadow: scrolled
-          ? "0 10px 40px rgba(0,0,0,0.35)"
-          : "none",
-      }}
+        ${
+          scrolled
+            ? "bg-surface/90 backdrop-blur-xl border-b border-primary/10 shadow-lg"
+            : "bg-bg"
+        }
+      `}
     >
-      {/* ✨ Cursor Glow Effect */}
+      {/* Soft Warm Glow */}
       <div
-        style={{
-          position: "absolute",
-          top: mouse.y - 100,
-          left: mouse.x - 100,
-          width: "200px",
-          height: "200px",
-          background:
-            "radial-gradient(circle, rgba(34,211,238,0.15), transparent 70%)",
-          pointerEvents: "none",
-          transition: "all 0.15s linear",
-          zIndex: 0,
-        }}
+        className="
+          absolute
+          top-0
+          left-1/2
+          -translate-x-1/2
+
+          w-[500px]
+          h-[180px]
+
+          bg-primary/10
+          blur-3xl
+
+          pointer-events-none
+        "
       />
 
-      {/* Top fade (blend with hero) */}
       <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "80px",
-          background:
-            "linear-gradient(to bottom, rgba(8,16,30,0.9), transparent)",
-          pointerEvents: "none",
-        }}
-      />
+        className="
+          relative
+          z-10
 
-      {/* Glow bottom line */}
-      {scrolled && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "1px",
-            background:
-              "linear-gradient(90deg, transparent, #22d3ee, transparent)",
-            opacity: 0.8,
-          }}
-        />
-      )}
+          max-w-7xl
+          mx-auto
 
-      <div
-        className="relative z-10 flex justify-between items-center"
-        style={{ padding: "0.8rem 2.5rem" }}
+          flex
+          items-center
+          justify-between
+
+          px-6
+          md:px-10
+
+          py-4
+        "
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <img
-            src="/Logo.png"
-            alt="Logo"
-            style={{
-              height: "44px",
-              transition: "all 0.3s ease",
-              filter: scrolled
-                ? "drop-shadow(0 0 14px rgba(34,211,238,0.7))"
-                : "drop-shadow(0 0 6px rgba(34,211,238,0.4))",
-            }}
-          />
+        <Link
+          to="/"
+          className="
+            flex
+            items-end
+            gap-2
+            transition-transform
+            duration-300
+            hover:scale-105
+          "
+        >
+          <h3 className="font-script text-4xl md:text-6xl text-text-primary leading-none">
+            Gati
+          </h3>
+
+          <h4 className="font-sans uppercase tracking-[0.15em] text-sm md:text-lg text-text-primary pb-1 md:pb-2">
+            Shakti
+          </h4>
         </Link>
 
-        {/* Nav Links */}
-        <ul
-          className="hidden md:flex items-center"
-          style={{ gap: "2.8rem", listStyle: "none", margin: 0 }}
-        >
+        {/* Desktop Navigation */}
+        <ul className="hidden md:flex items-center -ml-32 gap-10">
           {navLinks.map(({ to, label }) => {
             const isActive = location.pathname === to;
+
             return (
-              <li key={to}>
+              <li key={to} className="group">
                 <Link
                   to={to}
-                  style={{
-                    fontSize: "0.95rem",
-                    fontWeight: 500,
-                    textDecoration: "none",
-                    color: isActive ? "#22d3ee" : "#94a3b8",
-                    position: "relative",
-                    transition: "all 0.25s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = "#22d3ee";
-                    e.target.style.textShadow = "0 0 10px #22d3ee";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = isActive
-                      ? "#22d3ee"
-                      : "#94a3b8";
-                    e.target.style.textShadow = "none";
-                  }}
+                  className={`
+                    relative
+
+                    font-sans
+                    uppercase
+                    tracking-wider
+                    text-sm
+
+                    transition-colors
+                    duration-300
+
+                    ${
+                      isActive
+                        ? "text-primary"
+                        : "text-text-secondary group-hover:text-primary"
+                    }
+                  `}
                 >
                   {label}
+
+                  <span
+                    className={`
+                      absolute
+                      left-0
+                      -bottom-1
+
+                      h-[2px]
+                      bg-primary
+
+                      transition-all
+                      duration-300
+
+                      ${
+                        isActive
+                          ? "w-full"
+                          : "w-0 group-hover:w-full"
+                      }
+                    `}
+                  />
                 </Link>
               </li>
             );
           })}
         </ul>
 
-        {/* CTA Button */}
-        <Link to="/slots">
+        {/* Right side: Profile dropdown (desktop) + Hamburger (mobile) */}
+        <div className="flex items-center gap-3 md:gap-4">
+          {/* Profile Dropdown - visible on all screens */}
+          <div className="relative">
+            <button
+              onClick={() => setIsProfileOpen((prev) => !prev)}
+              className="
+                flex
+                items-center
+                justify-center
+
+                w-11
+                h-11
+
+                rounded-full
+
+                bg-surface
+                border
+                border-primary/10
+
+                transition-all
+                duration-300
+
+                
+                hover:text-white
+                hover:scale-105
+                hover:shadow-[0_10px_25px_rgba(217,93,3,0.2)]
+              "
+            >
+              <User size={20} className="text-primary group-hover:text-white" />
+            </button>
+
+            {/* Backdrop to close dropdown on outside click */}
+            {isProfileOpen && (
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setIsProfileOpen(false)}
+              />
+            )}
+
+            {/* Dropdown Drawer */}
+            <div
+              className={`
+                absolute
+                right-0
+                top-full
+                mt-3
+
+                w-56
+
+                origin-top-right
+
+                rounded-2xl
+                bg-surface
+                border
+                border-primary/10
+
+                shadow-[0_15px_35px_rgba(217,93,3,0.15)]
+
+                z-50
+
+                transition-all
+                duration-300
+                ease-out
+
+                ${
+                  isProfileOpen
+                    ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                }
+              `}
+            >
+              <div className="p-3 flex flex-col gap-2">
+                {isAdmin && (
+  <Link
+    to="/admin"
+    onClick={() => setIsProfileOpen(false)}
+    className="flex items-center gap-3 font-sans text-sm font-medium text-primary px-4 py-3 rounded-xl hover:bg-primary/10"
+  >
+    <Shield size={18} />
+    Admin Dashboard
+  </Link>
+)}
+                {isAuthenticated  ? (
+                  <>
+                    <div className="px-4 py-2 border-b border-primary/10 mb-1">
+    <p className="text-sm font-semibold text-text-primary">{user?.name}</p>
+    <p className="text-xs text-text-secondary">{user?.phoneNumber}</p>
+  </div>
+                  <Link
+                    to="/slots"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="
+                      flex
+                      items-center
+                      justify-center
+                      gap-2
+
+                      font-sans
+                      font-medium
+
+                      bg-primary
+                      hover:bg-primary-hover
+
+                      text-white
+
+                      px-6
+                      py-3
+
+                      rounded-full
+
+                      transition-all
+                      duration-300
+
+                      hover:scale-105
+                      hover:shadow-[0_10px_30px_rgba(217,93,3,0.25)]
+                    "
+                  >
+                    <Calendar size={18} />
+                    Book Slot
+                  </Link>
+                      <button
+      onClick={() => {
+        logout();
+        setIsProfileOpen(false);
+        navigate("/");
+      }}
+      className="
+        flex items-center justify-center gap-2
+        font-sans text-sm font-medium
+        text-red-500
+        px-4 py-3 rounded-xl
+        transition-all duration-300
+        hover:bg-red-50
+      "
+    >
+      <LogIn size={18} className="rotate-180" />
+      Logout
+    </button>
+  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="
+                        flex
+                        items-center
+                        gap-3
+
+                        font-sans
+                        text-sm
+                        font-medium
+
+                        text-text-primary
+
+                        px-4
+                        py-3
+
+                        rounded-xl
+
+                        transition-all
+                        duration-300
+
+                        hover:bg-primary/10
+                        hover:text-primary
+                      "
+                    >
+                      <LogIn size={18} />
+                      Login
+                    </Link>
+
+                    <Link
+                      to="/signup"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="
+                        flex
+                        items-center
+                        gap-3
+
+                        font-sans
+                        text-sm
+                        font-medium
+
+                        text-text-primary
+
+                        px-4
+                        py-3
+
+                        rounded-xl
+
+                        transition-all
+                        duration-300
+
+                        hover:bg-primary/10
+                        hover:text-primary
+                      "
+                    >
+                      <UserPlus size={18} />
+                      Sign Up
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Hamburger - mobile only */}
           <button
-            style={{
-              background:
-                "linear-gradient(135deg, #f8fafc, #e2e8f0)",
-              color: "#08101e",
-              padding: "0.55rem 1.6rem",
-              borderRadius: "9999px",
-              fontWeight: 700,
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.25s ease",
-              boxShadow: "0 8px 30px rgba(255,255,255,0.15)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.06)";
-              e.currentTarget.style.boxShadow =
-                "0 0 40px rgba(255,255,255,0.25)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 30px rgba(255,255,255,0.15)";
-            }}
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="
+              md:hidden
+
+              flex
+              items-center
+              justify-center
+
+              w-11
+              h-11
+
+              rounded-full
+
+              bg-surface
+              border
+              border-primary/10
+
+              transition-all
+              duration-300
+
+              hover:bg-primary
+              hover:text-white
+              hover:scale-105
+            "
           >
-            Book Slot →
+            <Menu size={20} className="text-primary" />
           </button>
-        </Link>
+        </div>
+      </div>
+
+      {/* Mobile Side Drawer */}
+      {/* Overlay */}
+      <div
+        className={`
+          fixed
+          inset-0
+          z-[60]
+
+          bg-black/40
+          backdrop-blur-sm
+
+          transition-opacity
+          duration-300
+
+          md:hidden
+
+          ${
+            isMobileMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }
+        `}
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
+
+      {/* Drawer Panel */}
+      <div
+        className={`
+          fixed
+          top-0
+          right-0
+          h-full
+
+          w-[80%]
+          max-w-sm
+
+          z-[70]
+
+          bg-surface
+
+          shadow-[-15px_0_35px_rgba(0,0,0,0.1)]
+
+          transition-transform
+          duration-300
+          ease-out
+
+          md:hidden
+
+          flex
+          flex-col
+        `}
+        style={{
+          transform: isMobileMenuOpen ? "translateX(0)" : "translateX(100%)",
+        }}
+      >
+        {/* Drawer Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-primary/10">
+          <div className="flex items-end gap-2">
+            <h3 className="font-script text-4xl text-text-primary leading-none">
+              Gati
+            </h3>
+            <h4 className="font-sans uppercase tracking-[0.15em] text-sm text-text-primary pb-1">
+              Shakti
+            </h4>
+          </div>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="
+              flex
+              items-center
+              justify-center
+
+              w-10
+              h-10
+
+              rounded-full
+
+              bg-bg
+              border
+              border-primary/10
+
+              transition-all
+              duration-300
+
+              hover:bg-primary
+              hover:text-white
+            "
+          >
+            <X size={20} className="text-primary" />
+          </button>
+        </div>
+
+        {/* Drawer Links */}
+        <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-2">
+          {navLinks.map(({ to, label }) => {
+            const isActive = location.pathname === to;
+
+            return (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`
+                  font-sans
+                  uppercase
+                  tracking-wider
+                  text-sm
+                  font-medium
+
+                  px-4
+                  py-4
+
+                  rounded-xl
+
+                  transition-all
+                  duration-300
+
+                  ${
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-text-secondary hover:bg-primary/5 hover:text-primary"
+                  }
+                `}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Drawer Footer - Auth / CTA */}
+        <div className="px-6 py-6 border-t border-primary/10 flex flex-col gap-3">
+          {isAuthenticated  ? (
+            <>
+              <div className="px-4 py-2 border-b border-primary/10 mb-1">
+    <p className="text-sm font-semibold text-text-primary">{user?.name}</p>
+    <p className="text-xs text-text-secondary">{user?.phoneNumber}</p>
+  </div>
+                        <Link
+              to="/slots"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+
+                font-sans
+                font-medium
+
+                bg-primary
+                hover:bg-primary-hover
+
+                text-white
+
+                px-6
+                py-3
+
+                rounded-full
+
+                transition-all
+                duration-300
+
+                hover:scale-105
+                hover:shadow-[0_10px_30px_rgba(217,93,3,0.25)]
+              "
+            >
+              <Calendar size={18} />
+              Book Slot
+            </Link>
+
+                <button
+      onClick={() => {
+        logout();
+        setIsProfileOpen(false);
+        navigate("/");
+      }}
+      className="
+        flex items-center justify-center gap-2
+        font-sans text-sm font-medium
+        text-red-500
+        px-4 py-3 rounded-xl
+        transition-all duration-300
+        hover:bg-red-50
+      "
+    >
+      <LogIn size={18} className="rotate-180" />
+      Logout
+    </button>
+            </>
+ 
+            
+          ) : (
+            <>
+              <Link
+                to="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+
+                  font-sans
+                  font-medium
+                  text-sm
+
+                  border
+                  border-primary
+
+                  text-primary
+
+                  px-6
+                  py-3
+
+                  rounded-full
+
+                  transition-all
+                  duration-300
+
+                  hover:bg-primary
+                  hover:text-white
+                "
+              >
+                <LogIn size={18} />
+                Login
+              </Link>
+
+              <Link
+                to="/signup"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+
+                  font-sans
+                  font-medium
+                  text-sm
+
+                  bg-primary
+                  hover:bg-primary-hover
+
+                  text-white
+
+                  px-6
+                  py-3
+
+                  rounded-full
+
+                  transition-all
+                  duration-300
+
+                  hover:scale-105
+                  hover:shadow-[0_10px_30px_rgba(217,93,3,0.25)]
+                "
+              >
+                <UserPlus size={18} />
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

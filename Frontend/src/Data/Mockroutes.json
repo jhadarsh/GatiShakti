@@ -1,0 +1,226 @@
+[
+  {
+    "id": "saket-kashmere",
+    "from": { "label": "Saket", "lat": 28.5244, "lng": 77.2066 },
+    "to":   { "label": "Kashmere Gate", "lat": 28.6671, "lng": 77.2285 },
+    "routes": [
+      {
+        "id": "r1",
+        "label": "Via AIIMS Flyover",
+        "distanceKm": 22.4,
+        "durationMin": 48,
+        "signals": 14,
+        "congestion": "high",
+        "waypoints": [[28.5244,77.2066],[28.5432,77.2074],[28.5700,77.2100],[28.6000,77.2150],[28.6300,77.2200],[28.6671,77.2285]]
+      },
+      {
+        "id": "r2",
+        "label": "Via Ring Road",
+        "distanceKm": 24.1,
+        "durationMin": 54,
+        "signals": 18,
+        "congestion": "high",
+        "waypoints": [[28.5244,77.2066],[28.5350,77.1950],[28.5800,77.1900],[28.6200,77.2000],[28.6671,77.2285]]
+      },
+      {
+        "id": "r3",
+        "label": "Via Lodhi Road",
+        "distanceKm": 21.8,
+        "durationMin": 44,
+        "signals": 11,
+        "congestion": "medium",
+        "waypoints": [[28.5244,77.2066],[28.5500,77.2200],[28.5900,77.2250],[28.6200,77.2260],[28.6671,77.2285]]
+      },
+      {
+        "id": "r4",
+        "label": "Via ITO Bridge",
+        "distanceKm": 23.5,
+        "durationMin": 51,
+        "signals": 16,
+        "congestion": "medium",
+        "waypoints": [[28.5244,77.2066],[28.5600,77.2300],[28.6100,77.2400],[28.6400,77.2350],[28.6671,77.2285]]
+      }
+    ]
+  },
+  {
+    "id": "rajiv-dwarka",
+    "from": { "label": "Rajiv Chowk", "lat": 28.6327, "lng": 77.2195 },
+    "to":   { "label": "Dwarka Sector 21", "lat": 28.5528, "lng": 77.0588 },
+    "routes": [
+      {
+        "id": "r1",
+        "label": "Via NH-48",
+        "distanceKm": 26.3,
+        "durationMin": 55,
+        "signals": 16,
+        "congestion": "high",
+        "waypoints": [[28.6327,77.2195],[28.6100,77.1900],[28.5900,77.1500],[28.5700,77.1100],[28.5528,77.0588]]
+      },
+      {
+        "id": "r2",
+        "label": "Via Dhaula Kuan",
+        "distanceKm": 27.8,
+        "durationMin": 62,
+        "signals": 19,
+        "congestion": "high",
+        "waypoints": [[28.6327,77.2195],[28.5950,77.1800],[28.5750,77.1300],[28.5600,77.0900],[28.5528,77.0588]]
+      },
+      {
+        "id": "r3",
+        "label": "Via Palam Flyover",
+        "distanceKm": 25.1,
+        "durationMin": 48,
+        "signals": 12,
+        "congestion": "low",
+        "waypoints": [[28.6327,77.2195],[28.6100,77.1700],[28.5800,77.1200],[28.5600,77.0800],[28.5528,77.0588]]
+      },
+      {
+        "id": "r4",
+        "label": "Via Mahipalpur",
+        "distanceKm": 28.5,
+        "durationMin": 58,
+        "signals": 17,
+        "congestion": "medium",
+        "waypoints": [[28.6327,77.2195],[28.5900,77.1600],[28.5650,77.1000],[28.5550,77.0700],[28.5528,77.0588]]
+      },
+      {
+        "id": "r5",
+        "label": "Via Kapashera",
+        "distanceKm": 30.2,
+        "durationMin": 65,
+        "signals": 21,
+        "congestion": "high",
+        "waypoints": [[28.6327,77.2195],[28.5800,77.1900],[28.5400,77.1200],[28.5300,77.0900],[28.5528,77.0588]]
+      }
+    ]
+  },
+  {
+    "id": "cp-noida",
+    "from": { "label": "Connaught Place", "lat": 28.6304, "lng": 77.2177 },
+    "to":   { "label": "Noida Sector 18", "lat": 28.5675, "lng": 77.3219 },
+    "routes": [
+      {
+        "id": "r1",
+        "label": "Via DND Flyway",
+        "distanceKm": 19.2,
+        "durationMin": 36,
+        "signals": 8,
+        "congestion": "low",
+        "waypoints": [[28.6304,77.2177],[28.6100,77.2500],[28.5900,77.2800],[28.5750,77.3000],[28.5675,77.3219]]
+      },
+      {
+        "id": "r2",
+        "label": "Via NH-9",
+        "distanceKm": 21.5,
+        "durationMin": 45,
+        "signals": 13,
+        "congestion": "medium",
+        "waypoints": [[28.6304,77.2177],[28.6200,77.2600],[28.5950,77.2900],[28.5800,77.3100],[28.5675,77.3219]]
+      },
+      {
+        "id": "r3",
+        "label": "Via Akshardham",
+        "distanceKm": 20.8,
+        "durationMin": 52,
+        "signals": 17,
+        "congestion": "high",
+        "waypoints": [[28.6304,77.2177],[28.6150,77.2700],[28.5850,77.3000],[28.5700,77.3150],[28.5675,77.3219]]
+      }
+    ]
+  },
+  {
+    "id": "rohini-lajpat",
+    "from": { "label": "Rohini Sector 3", "lat": 28.7295, "lng": 77.1139 },
+    "to":   { "label": "Lajpat Nagar", "lat": 28.5672, "lng": 77.2437 },
+    "routes": [
+      {
+        "id": "r1",
+        "label": "Via GTK Road",
+        "distanceKm": 31.4,
+        "durationMin": 68,
+        "signals": 22,
+        "congestion": "high",
+        "waypoints": [[28.7295,77.1139],[28.7000,77.1500],[28.6600,77.1900],[28.6200,77.2100],[28.5900,77.2300],[28.5672,77.2437]]
+      },
+      {
+        "id": "r2",
+        "label": "Via Outer Ring Road",
+        "distanceKm": 33.7,
+        "durationMin": 58,
+        "signals": 14,
+        "congestion": "medium",
+        "waypoints": [[28.7295,77.1139],[28.7100,77.1000],[28.6700,77.1200],[28.6200,77.1800],[28.5900,77.2200],[28.5672,77.2437]]
+      },
+      {
+        "id": "r3",
+        "label": "Via Metro Corridor",
+        "distanceKm": 29.8,
+        "durationMin": 72,
+        "signals": 9,
+        "congestion": "low",
+        "waypoints": [[28.7295,77.1139],[28.7050,77.1400],[28.6700,77.1700],[28.6300,77.2000],[28.5900,77.2250],[28.5672,77.2437]]
+      },
+      {
+        "id": "r4",
+        "label": "Via Wazirabad Road",
+        "distanceKm": 35.1,
+        "durationMin": 77,
+        "signals": 25,
+        "congestion": "high",
+        "waypoints": [[28.7295,77.1139],[28.7200,77.0900],[28.6900,77.1100],[28.6400,77.1600],[28.5900,77.2100],[28.5672,77.2437]]
+      }
+    ]
+  },
+  {
+    "id": "chandni-vasant",
+    "from": { "label": "Chandni Chowk", "lat": 28.6562, "lng": 77.2310 },
+    "to":   { "label": "Vasant Kunj", "lat": 28.5200, "lng": 77.1500 },
+    "routes": [
+      {
+        "id": "r1",
+        "label": "Via New Delhi Rd",
+        "distanceKm": 18.9,
+        "durationMin": 42,
+        "signals": 13,
+        "congestion": "medium",
+        "waypoints": [[28.6562,77.2310],[28.6300,77.2100],[28.6000,77.1900],[28.5700,77.1700],[28.5200,77.1500]]
+      },
+      {
+        "id": "r2",
+        "label": "Via Mehrauli Road",
+        "distanceKm": 20.3,
+        "durationMin": 38,
+        "signals": 10,
+        "congestion": "low",
+        "waypoints": [[28.6562,77.2310],[28.6200,77.2000],[28.5900,77.1800],[28.5500,77.1600],[28.5200,77.1500]]
+      },
+      {
+        "id": "r3",
+        "label": "Via IIT Flyover",
+        "distanceKm": 22.1,
+        "durationMin": 48,
+        "signals": 15,
+        "congestion": "medium",
+        "waypoints": [[28.6562,77.2310],[28.6300,77.2200],[28.5900,77.2000],[28.5500,77.1700],[28.5200,77.1500]]
+      },
+      {
+        "id": "r4",
+        "label": "Via Priya Cinema",
+        "distanceKm": 21.5,
+        "durationMin": 55,
+        "signals": 18,
+        "congestion": "high",
+        "waypoints": [[28.6562,77.2310],[28.6400,77.2100],[28.6000,77.1800],[28.5600,77.1600],[28.5200,77.1500]]
+      },
+      {
+        "id": "r5",
+        "label": "Via JNU Road",
+        "distanceKm": 23.4,
+        "durationMin": 51,
+        "signals": 16,
+        "congestion": "medium",
+        "waypoints": [[28.6562,77.2310],[28.6200,77.1900],[28.5800,77.1700],[28.5400,77.1550],[28.5200,77.1500]]
+      }
+    ]
+  }
+]

@@ -1,31 +1,68 @@
+const cron = require("node-cron");
+const axios = require("axios");
 require("dotenv").config();
-
-const express = require("express");
-const mongoose =require("mongoose");
-const slotRoutes = require("./routes/Slots");
-const adminRoutes = require("./routes/admin");
-const ReportRoute = require("./routes/Reporting");
-const bodyParser = require("body-parser");
 const cors = require("cors");
-const PORT = process.env.PORT;
-const url = process.env.MONGO_URL;
+const express = require("express");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
+const trafficRoutes = require("./routes/trafficRoutes");
+const potholeRoutes = require("./routes/potholeRoutes");
+const parkingRoutes = require("./routes/parkingRoutes");
+const parkingBookingRoutes = require("./routes/parkingBookingRoutes");
+const complaintRoutes = require("./routes/complaintRoutes");
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+ 
+
+
 app.use(express.json());
+app.use("/api/auth", authRoutes);
+app.use("/api/traffic",trafficRoutes);
+app.use("/api/potholes",potholeRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/parking",parkingRoutes);
+app.use("/api/parking-Booking",parkingBookingRoutes);
 
-mongoose.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() =>{
+    console.log("Mongodb conected to server you are good to go");
+  })
+  .catch((err)=>{
+    console.log("Database Conection error");
+    console.error("MongoDB connection error :" , err.message);
+  });
+
+app.get("/health" , (req , res) => {
+  res.json({
+    success : true,
+    message :"server is running properly",
+  });
+});
+
+// Ping server every 15 minutes
+cron.schedule("*/15 * * * *", async () => {
+  try {
+    const response = await axios.get(
+      "https://your-app-name.onrender.com/health"
+    );
+
+    console.log(
+      `[CRON] Ping successful at ${new Date().toLocaleString()}`
+    );
+  } catch (err) {
+    console.error(
+      `[CRON] Ping failed: ${err.message}`
+    );
+  }
+});
+
+ 
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT , () => {
+  console.log("Server is Running On PORT : " , PORT);
 })
-.then(() => console.log("connection established"))
-.catch((err) => console.log(err));
-
-// Routes
-app.use("/api/slots", slotRoutes);
-app.use("/api/admin",adminRoutes);
-app.use("/api/reporting",ReportRoute);
-
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -10,7 +10,7 @@ const features = [
   {
     icon: <ParkingCircle size={28} />,
     title: "Book Parking",
-    desc: "Find and reserve nearby parking spots بسهولة before reaching your destination.",
+    desc: "Find and reserve nearby parking spots before reaching your destination.",
   },
   {
     icon: <AlertTriangle size={28} />,
@@ -21,87 +21,225 @@ const features = [
 
 export default function WhatWeProvide() {
   return (
-    <section className="relative w-full py-24 bg-[#08101e] overflow-hidden">
+    <section className="relative pt-40 pb-24 bg-section overflow-hidden">
 
-      {/* 🔥 Grid Background */}
+      {/* Hero -> Section Transition */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
+        <svg
+          viewBox="0 0 1440 120"
+          className="relative block w-full h-[80px] md:h-[120px]"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="#F3E4DA"
+            d="M0,64L80,74.7C160,85,320,107,480,106.7C640,107,800,85,960,69.3C1120,53,1280,43,1360,37.3L1440,32L1440,0L0,0Z"
+          />
+        </svg>
+      </div>
+
+      {/* Floating Background Effects */}
+      <div className="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+
+      {/* Subtle Grid */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
+            linear-gradient(rgba(217,93,3,0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(217,93,3,0.08) 1px, transparent 1px)
           `,
-          backgroundSize: "56px 56px",
-        }}
-      />
-
-      {/* 🔥 Glow */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background: `
-            radial-gradient(circle at 20% 30%, rgba(34,211,238,0.12), transparent 40%),
-            radial-gradient(circle at 80% 70%, rgba(245,158,11,0.1), transparent 40%)
-          `,
+          backgroundSize: "48px 48px",
         }}
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6">
 
         {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center text-4xl md:text-5xl font-bold text-white mb-16"
-        >
-          What <span className="text-cyan-400">We Provide</span>
-        </motion.h2>
+        <div className="text-center mb-16">
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="
+              font-script
+              text-primary
+              text-5xl
+              md:text-6xl
+            "
+          >
+            Services
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="
+              font-sans
+              text-text-primary
+              text-4xl
+              md:text-5xl
+              font-bold
+              uppercase
+              tracking-wide
+            "
+          >
+            What We Provide
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+            className="
+              mt-5
+              max-w-2xl
+              mx-auto
+              text-text-secondary
+              leading-relaxed
+            "
+          >
+            Intelligent traffic solutions designed to reduce congestion,
+            improve mobility, and create a smarter urban transportation
+            experience.
+          </motion.p>
+        </div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-3">
 
           {features.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2, duration: 0.6 }}
-              whileHover={{ scale: 1.05 }}
-              className="group rounded-2xl p-6 cursor-pointer"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                backdropFilter: "blur(10px)",
+              transition={{
+                delay: i * 0.15,
+                duration: 0.6,
               }}
+              viewport={{ once: true }}
+              className="
+                group
+                relative
+
+                bg-surface
+                rounded-3xl
+                p-8
+
+                border
+                border-primary/10
+
+                transition-all
+                duration-500
+
+                hover:-translate-y-3
+                hover:shadow-[0_20px_50px_rgba(217,93,3,0.15)]
+
+                overflow-hidden
+              "
             >
+
+              {/* Animated Top Border */}
+              <div
+                className="
+                  absolute
+                  top-0
+                  left-0
+                  h-1
+                  w-0
+
+                  bg-primary
+
+                  transition-all
+                  duration-500
+
+                  group-hover:w-full
+                "
+              />
+
               {/* Icon */}
               <div
-                className="mb-4 w-12 h-12 flex items-center justify-center rounded-full"
-                style={{
-                  background: "rgba(34,211,238,0.1)",
-                  color: "#22d3ee",
-                }}
+                className="
+                  w-14
+                  h-14
+
+                  rounded-full
+
+                  flex
+                  items-center
+                  justify-center
+
+                  bg-primary/10
+                  text-primary
+
+                  mb-6
+
+                  transition-all
+                  duration-500
+
+                  group-hover:bg-primary
+                  group-hover:text-white
+                  group-hover:rotate-6
+                "
               >
                 {item.icon}
               </div>
 
               {/* Title */}
-              <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-cyan-400 transition">
+              <h3
+                className="
+                  text-xl
+                  font-semibold
+
+                  text-text-primary
+
+                  mb-3
+
+                  transition-colors
+                  duration-300
+
+                  group-hover:text-primary
+                "
+              >
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate-400 text-sm leading-relaxed">
+              <p
+                className="
+                  text-text-secondary
+                  leading-relaxed
+                "
+              >
                 {item.desc}
               </p>
 
-              {/* Glow Hover Effect */}
+              {/* Decorative Circle */}
               <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition"
-                style={{
-                  boxShadow: "0 0 40px rgba(34,211,238,0.15)",
-                }}
+                className="
+                  absolute
+                  -right-12
+                  -bottom-12
+
+                  w-32
+                  h-32
+
+                  rounded-full
+
+                  bg-primary/5
+
+                  scale-0
+                  group-hover:scale-100
+
+                  transition-all
+                  duration-700
+                "
               />
             </motion.div>
           ))}

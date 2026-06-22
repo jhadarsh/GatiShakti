@@ -4,10 +4,9 @@ import WhatWeProvide from "../../components/user/home/WhatWeProvide";
  
 export default function Landing() {
     return(
-        <div style={{ background: "#08101e" }}>
-      <Hero />
-      <Banner/>
-      <WhatWeProvide />
-    </div>
+  <main className="pt-20">
+  <Hero />
+  <WhatWeProvide />
+</main>
     )
 }

@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "mock-1",
+    "category": "Potholes",
+    "description": "Large pothole near sector 62 flyover causing accidents daily. At least 3 vehicles have been damaged this week alone.",
+    "location": "Sector 62 Flyover, Noida",
+    "status": "Pending",
+    "upvotes": 47,
+    "images": ["https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400&q=80"],
+    "createdAt": "2026-06-20T08:30:00.000Z",
+    "userId": "user-other"
+  },
+  {
+    "_id": "mock-2",
+    "category": "Water Logging",
+    "description": "The entire underpass gets flooded after every rain. Pedestrians are forced to wade through knee-deep water risking their safety.",
+    "location": "Rajnagar Extension Underpass, Ghaziabad",
+    "status": "In Progress",
+    "upvotes": 89,
+    "images": [],
+    "createdAt": "2026-06-17T10:15:00.000Z",
+    "userId": "user-other"
+  },
+  {
+    "_id": "mock-3",
+    "category": "Broken Signals",
+    "description": "Traffic signal at main chowk has been non-functional for 10 days straight. Morning jams stretch back 2km every day.",
+    "location": "Vaishali Chowk, Ghaziabad",
+    "status": "Resolved",
+    "upvotes": 132,
+    "images": ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
+    "createdAt": "2026-06-10T07:00:00.000Z",
+    "userId": "mock-me"
+  },
+  {
+    "_id": "mock-4",
+    "category": "Encroachment",
+    "description": "Vendors have occupied 70% of the footpath near the market. Pedestrians are forced onto the main road, making it dangerous.",
+    "location": "Indirapuram Market, Ghaziabad",
+    "status": "Pending",
+    "upvotes": 23,
+    "images": [],
+    "createdAt": "2026-06-21T14:45:00.000Z",
+    "userId": "user-other"
+  },
+  {
+    "_id": "mock-5",
+    "category": "Traffic Jam",
+    "description": "No traffic management during school hours near this school gate. Vehicles block both lanes from 7:30–9am daily.",
+    "location": "DPS School Gate, Sector 30, Noida",
+    "status": "In Progress",
+    "upvotes": 61,
+    "images": ["https://images.unsplash.com/photo-1567521464027-f127ff144326?w=400&q=80"],
+    "createdAt": "2026-06-19T09:00:00.000Z",
+    "userId": "mock-me"
+  }
+]

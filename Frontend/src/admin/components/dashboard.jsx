@@ -1,4 +1,4 @@
-// src/pages/admin/Dashboard.jsx
+// src/components/dashboard.jsx
 import React from "react";
 import {
   Box,
@@ -11,6 +11,12 @@ import {
   List,
   ListItem,
   ListItemText,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import {
   CameraAlt,
@@ -18,8 +24,8 @@ import {
   DirectionsCar,
   GppGood,
   Build,
-  ReportProblem,
   CheckCircle,
+  FiberManualRecord,
 } from "@mui/icons-material";
 import {
   LineChart,
@@ -32,216 +38,312 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
   Legend,
 } from "recharts";
-import MetroStationDashboard from "./MetroStationDashboard";
-import Complaint from "./Complaint";
-// Mock Insights Data
-const kpis = {
-  cameras: 124,
-  lanes: 320,
-  dailyTraffic: "2.4M",
-  compliance: 86,
-  accidentsPrevented: 312,
-  potholesFixed: 58,
+
+import data from "../../Data/Dashboarddata.json";
+
+// ── colour tokens ──────────────────────────────────────────────
+const PURPLE = "#4B0082";
+const PURPLE_LIGHT = "#F3EAF9";
+const PURPLE_MID = "#7c3aed";
+
+const FEED_COLORS = {
+  info: PURPLE_MID,
+  success: "#16a34a",
+  warning: "#d97706",
+  error: "#dc2626",
 };
 
-const trafficTrend = [
-  { day: "Mon", volume: 2100000 },
-  { day: "Tue", volume: 2300000 },
-  { day: "Wed", volume: 2500000 },
-  { day: "Thu", volume: 2400000 },
-  { day: "Fri", volume: 2600000 },
-];
+const STATUS_CHIP = {
+  Online:   { bg: "#dcfce7", color: "#15803d" },
+  Partial:  { bg: "#fef9c3", color: "#a16207" },
+  Offline:  { bg: "#fee2e2", color: "#b91c1c" },
+};
 
-const complianceData = [
-  { name: "Compliant", value: 86 },
-  { name: "Violations", value: 14 },
-];
+const COMPLIANCE_COLORS = ["#4B0082", "#e5e7eb"];
 
-const accidentsData = [
-  { year: "2021", prevented: 120 },
-  { year: "2022", prevented: 180 },
-  { year: "2023", prevented: 240 },
-  { year: "2024", prevented: 312 },
-];
+const kpiIcons = {
+  cameras:            <CameraAlt sx={{ fontSize: 20 }} />,
+  lanes:              <Traffic sx={{ fontSize: 20 }} />,
+  dailyTraffic:       <DirectionsCar sx={{ fontSize: 20 }} />,
+  compliance:         <GppGood sx={{ fontSize: 20 }} />,
+  accidentsPrevented: <CheckCircle sx={{ fontSize: 20 }} />,
+  potholesFixed:      <Build sx={{ fontSize: 20 }} />,
+};
 
-const activityFeed = [
-  {
-    id: 1,
-    text: "Camera #1023 calibrated successfully",
-    time: "5 mins ago",
-  },
-  {
-    id: 2,
-    text: "Pothole fixed at Sector 44, Gurgaon",
-    time: "25 mins ago",
-  },
-  {
-    id: 3,
-    text: "Traffic compliance reached 90% peak today",
-    time: "2 hrs ago",
-  },
-  {
-    id: 4,
-    text: "New AI camera installed at Ring Road",
-    time: "4 hrs ago",
-  },
-];
+const kpiLabels = {
+  cameras:            "Cameras installed",
+  lanes:              "Lanes covered",
+  dailyTraffic:       "Daily traffic volume",
+  compliance:         "Compliance rate",
+  accidentsPrevented: "Accidents prevented",
+  potholesFixed:      "Potholes fixed (week)",
+};
 
-const COLORS = ["#4caf50", "#f44336"];
+// ── shared styles ──────────────────────────────────────────────
+const card = {
+  p: 3,
+  borderRadius: "12px",
+  border: "0.5px solid #e5e7eb",
+  boxShadow: "none",
+  bgcolor: "#fff",
+};
 
-export default function PremiumDashboard() {
+const sectionTitle = {
+  fontSize: 13,
+  fontWeight: 600,
+  fontFamily: "'Poppins', sans-serif",
+  color: "#1f1f3b",
+  mb: 2,
+};
+
+// ── sub-components ─────────────────────────────────────────────
+function KpiCard({ id, value, trend, direction }) {
   return (
-    <Box
-      sx={{
-        p: 4,
-        fontFamily: "'Inter', sans-serif",
-        minHeight: "100vh",
-      }}
-    >
-      {/* Header */}
-      <Typography
-        sx={{
-          fontFamily: "'Poppins', sans-serif", fontWeight: 700, color: "#4B0082" ,   fontSize: 28,mb:3}}
-      >
-        Smart City Authority Dashboard
-      </Typography>
-
-      {/* KPI Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <KpiCard icon={<CameraAlt />} value={kpis.cameras} label="Cameras Installed" />
-        <KpiCard icon={<Traffic />} value={kpis.lanes} label="Lanes Covered" />
-        <KpiCard icon={<DirectionsCar />} value={kpis.dailyTraffic} label="Daily Traffic Volume" />
-        <KpiCard icon={<GppGood />} value={`${kpis.compliance}%`} label="Compliance Rate" />
-        <KpiCard icon={<CheckCircle />} value={kpis.accidentsPrevented} label="Accidents Prevented" />
-        <KpiCard icon={<Build />} value={kpis.potholesFixed} label="Potholes Fixed (Week)" />
-      </Grid>
-
-     {/* Charts Section */}
-<Grid container spacing={4}>
-  <Box sx={{ width: '30%', mb: 4 }}>
-    <Paper sx={chartCard}>
-      <Typography sx={chartTitle}>Traffic Volume Trend</Typography>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={trafficTrend}>
-          <Line type="monotone" dataKey="volume" stroke="#673ab7" strokeWidth={3} />
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" />
-          <YAxis tickFormatter={(v) => `${(v / 1e6).toFixed(1)}M`} />
-          <Tooltip formatter={(v) => `${(v / 1e6).toFixed(2)}M`} />
-        </LineChart>
-      </ResponsiveContainer>
-    </Paper>
-  </Box>
-
-   <Box sx={{ width: '30%', mb: 4 }}>
-    <Paper sx={chartCard}>
-      <Typography sx={chartTitle}>Compliance Overview</Typography>
-      <ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={complianceData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            label
-          >
-            {complianceData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index]} />
-            ))}
-          </Pie>
-          <Legend />
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    </Paper>
-  </Box>
- 
-   <Box sx={{ width: '30%', mb: 4 }}>
-    <Paper sx={chartCard}>
-      <Typography sx={chartTitle}>Accidents Prevented by Year</Typography>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={accidentsData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="year" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="prevented" fill="#2196f3" barSize={50} />
-        </BarChart>
-      </ResponsiveContainer>
-    </Paper>
-  </Box>
-</Grid>
-<MetroStationDashboard/>
-<Complaint/>
-
-      {/* Activity Feed */}
-      <Box sx={{ mt: 4 }}>
-        <Paper sx={chartCard}>
-          <Typography sx={chartTitle}>Recent System Activity</Typography>
-          <Divider sx={{ my: 2 }} />
-          <List>
-            {activityFeed.map((a) => (
-              <ListItem key={a.id} sx={{ px: 0 }}>
-                <ReportProblem sx={{ color: "#673ab7", mr: 2 }} />
-                <ListItemText
-                  primary={a.text}
-                  secondary={a.time}
-                  primaryTypographyProps={{ fontWeight: 600 }}
-                  secondaryTypographyProps={{ color: "text.secondary" }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Box>
-    </Box>
-  );
-}
-
-/* ---- KPI CARD COMPONENT ---- */
-function KpiCard({ icon, value, label }) {
-  return (
-    <Grid item xs={12} sm={6} md={4} lg={2}>
+    <Grid item xs={6} sm={4} md={4} lg={2}>
       <Paper
         sx={{
-          p: 3,
-          borderRadius: 3,
-          textAlign: "center",
-          background: "rgba(255,255,255,0.8)",
-          backdropFilter: "blur(12px)",
-          boxShadow: "0 8px 24px rgba(12,20,40,0.08)",
-          transition: "0.3s",
-          "&:hover": { transform: "translateY(-5px)", boxShadow: "0 12px 32px rgba(12,20,40,0.15)" },
+          p: 2.5,
+          borderRadius: "12px",
+          border: "0.5px solid #e5e7eb",
+          boxShadow: "none",
+          bgcolor: "#fafafa",
+          transition: "transform 0.18s",
+          "&:hover": { transform: "translateY(-3px)" },
         }}
       >
-        <Stack spacing={1} alignItems="center">
-          <Avatar sx={{ bgcolor: "#673ab7", width: 56, height: 56 }}>{icon}</Avatar>
-          <Typography sx={{ fontSize: 28, fontWeight: 700, color: "#1f1f3b" }}>{value}</Typography>
-          <Typography sx={{ fontSize: 14, color: "#555" }}>{label}</Typography>
-        </Stack>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1.5,
+          }}
+        >
+          <Avatar
+            sx={{
+              bgcolor: PURPLE_LIGHT,
+              color: PURPLE,
+              width: 36,
+              height: 36,
+            }}
+          >
+            {kpiIcons[id]}
+          </Avatar>
+          <Typography
+            sx={{
+              fontSize: 11,
+              fontWeight: 600,
+              color: direction === "up" ? "#16a34a" : "#dc2626",
+            }}
+          >
+            {trend}
+          </Typography>
+        </Box>
+        <Typography sx={{ fontSize: 22, fontWeight: 700, color: "#1f1f3b", lineHeight: 1 }}>
+          {value}
+        </Typography>
+        <Typography sx={{ fontSize: 11.5, color: "#6b6b6b", mt: 0.5 }}>
+          {kpiLabels[id]}
+        </Typography>
       </Paper>
     </Grid>
   );
 }
 
-/* ---- Styles ---- */
-const chartCard = {
-  p: 3,
-  borderRadius: 3,
-  background: "rgba(255,255,255,0.9)",
-  backdropFilter: "blur(12px)",
-  boxShadow: "0 8px 24px rgba(12,20,40,0.06)",
-};
-const chartTitle = {
-  fontWeight: 700,
-  fontSize: 16,
-  fontFamily: "'Poppins', sans-serif",
-  mb: 2,
-  color: "#1f1f3b",
-};
+function StatusChip({ status }) {
+  const s = STATUS_CHIP[status] ?? { bg: "#f3f4f6", color: "#555" };
+  return (
+    <Chip
+      label={status}
+      size="small"
+      sx={{
+        bgcolor: s.bg,
+        color: s.color,
+        fontWeight: 600,
+        fontSize: 11,
+        height: 22,
+        borderRadius: "20px",
+        "& .MuiChip-label": { px: 1.2 },
+      }}
+    />
+  );
+}
+
+// ── main dashboard ─────────────────────────────────────────────
+export default function AdminDashboard() {
+  return (
+    <Box sx={{ p: { xs: 2, md: 4 }, fontFamily: "'Inter', sans-serif", bgcolor: "#fff", minHeight: "100vh" }}>
+      {/* Page header */}
+      <Box sx={{ mb: 3 }}>
+        <Typography
+          sx={{ fontSize: 22, fontWeight: 700, color: PURPLE, fontFamily: "'Poppins', sans-serif" }}
+        >
+          Smart City Authority
+        </Typography>
+        <Typography sx={{ fontSize: 13, color: "#6b6b6b" }}>
+          Real-time infrastructure and traffic intelligence
+        </Typography>
+      </Box>
+
+      {/* KPI cards */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        {Object.entries(data.kpis).map(([id, kpi]) => (
+          <KpiCard key={id} id={id} {...kpi} />
+        ))}
+      </Grid>
+
+      {/* Charts row */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        {/* Traffic trend */}
+        <Grid item xs={12} md={8}>
+          <Paper sx={card}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+              <Typography sx={sectionTitle}>Traffic volume trend</Typography>
+              <Chip label="This week" size="small" sx={{ fontSize: 11, bgcolor: "#fafafa", border: "0.5px solid #e5e7eb", borderRadius: "20px" }} />
+            </Box>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={data.trafficTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
+                <YAxis
+                  tickFormatter={(v) => `${(v / 1e6).toFixed(1)}M`}
+                  tick={{ fontSize: 11, fill: "#888" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip formatter={(v) => `${(v / 1e6).toFixed(2)}M`} contentStyle={{ borderRadius: 8, border: "0.5px solid #e5e7eb", fontSize: 12 }} />
+                <Line
+                  type="monotone"
+                  dataKey="volume"
+                  stroke={PURPLE}
+                  strokeWidth={2.5}
+                  dot={{ r: 4, fill: PURPLE, strokeWidth: 0 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+
+        {/* Compliance donut */}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ ...card, height: "100%" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+              <Typography sx={sectionTitle}>Compliance split</Typography>
+              <Chip label="Today" size="small" sx={{ fontSize: 11, bgcolor: "#fafafa", border: "0.5px solid #e5e7eb", borderRadius: "20px" }} />
+            </Box>
+            <ResponsiveContainer width="100%" height={180}>
+              <PieChart>
+                <Pie
+                  data={data.complianceData}
+                  dataKey="value"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
+                  paddingAngle={3}
+                >
+                  {data.complianceData.map((_, i) => (
+                    <Cell key={i} fill={COMPLIANCE_COLORS[i]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ borderRadius: 8, border: "0.5px solid #e5e7eb", fontSize: 12 }} />
+              </PieChart>
+            </ResponsiveContainer>
+            <Stack spacing={0.8}>
+              {data.complianceData.map((d, i) => (
+                <Box key={d.name} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Box sx={{ width: 10, height: 10, borderRadius: "2px", bgcolor: COMPLIANCE_COLORS[i], flexShrink: 0 }} />
+                  <Typography sx={{ fontSize: 12, color: "#6b6b6b", flex: 1 }}>{d.name}</Typography>
+                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: "#1f1f3b" }}>{d.value}%</Typography>
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Bottom row */}
+      <Grid container spacing={2}>
+        {/* Activity feed */}
+        <Grid item xs={12} md={6}>
+          <Paper sx={card}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+              <Typography sx={sectionTitle}>Recent system activity</Typography>
+              <Chip
+                label="Live"
+                size="small"
+                sx={{ fontSize: 11, bgcolor: "#F3EAF9", color: PURPLE, fontWeight: 600, borderRadius: "20px" }}
+              />
+            </Box>
+            <List disablePadding>
+              {data.activityFeed.map((item, i) => (
+                <ListItem
+                  key={item.id}
+                  disablePadding
+                  sx={{
+                    py: 1.2,
+                    borderBottom: i < data.activityFeed.length - 1 ? "0.5px solid #f5f5f5" : "none",
+                    alignItems: "flex-start",
+                    gap: 1.5,
+                  }}
+                >
+                  <FiberManualRecord
+                    sx={{ fontSize: 9, color: FEED_COLORS[item.type] ?? PURPLE_MID, mt: 0.7, flexShrink: 0 }}
+                  />
+                  <ListItemText
+                    primary={item.text}
+                    secondary={item.time}
+                    primaryTypographyProps={{ fontSize: 13, fontWeight: 500, color: "#1f1f3b" }}
+                    secondaryTypographyProps={{ fontSize: 11, color: "#9ca3af" }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </Grid>
+
+        {/* Zone status table */}
+        <Grid item xs={12} md={6}>
+          <Paper sx={card}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+              <Typography sx={sectionTitle}>Signal zone status</Typography>
+              <Chip label={`${data.zoneStatus.length} zones`} size="small" sx={{ fontSize: 11, bgcolor: "#fafafa", border: "0.5px solid #e5e7eb", borderRadius: "20px" }} />
+            </Box>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  {["Zone", "Cameras", "Status"].map((h) => (
+                    <TableCell
+                      key={h}
+                      sx={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "0.5px solid #e5e7eb", pb: 1 }}
+                    >
+                      {h}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.zoneStatus.map((row) => (
+                  <TableRow key={row.id} sx={{ "&:last-child td": { border: 0 } }}>
+                    <TableCell sx={{ fontSize: 13, color: "#1f1f3b", borderBottom: "0.5px solid #f5f5f5" }}>
+                      {row.zone}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: 13, color: "#6b6b6b", borderBottom: "0.5px solid #f5f5f5" }}>
+                      {row.cameras}
+                    </TableCell>
+                    <TableCell sx={{ borderBottom: "0.5px solid #f5f5f5" }}>
+                      <StatusChip status={row.status} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}

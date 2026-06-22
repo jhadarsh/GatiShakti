@@ -1,0 +1,1056 @@
+## AUTH API DOCUMENTATION ##
+---------------------------------
+
+Base URL
+
+http://localhost:8080/api/auth
+
+---
+
+1. Health Check
+
+GET /health
+
+Response
+
+{
+"success": true,
+"message": "server is running properly"
+}
+
+---
+
+2. Signup
+
+POST /signup
+
+Body
+
+{
+"name": "Adarsh",
+"email": "[adarsh@gmail.com](mailto:adarsh@gmail.com)",
+"password": "12345678",
+"phoneNumber": "9876543210"
+}
+
+Success Response
+
+{
+"success": true,
+"message": "OTP sent successfully",
+"email": "[adarsh@gmail.com](mailto:adarsh@gmail.com)"
+}
+
+---
+
+3. Verify OTP
+
+POST /verify-otp
+
+Body
+
+{
+"email": "[adarsh@gmail.com](mailto:adarsh@gmail.com)",
+"otp": "123456"
+}
+
+Success Response
+
+{
+"success": true,
+"message": "Account verified successfully"
+}
+
+---
+
+4. User Login
+
+POST /login
+
+Body
+
+{
+"phoneNumber": "9876543210",
+"password": "12345678"
+}
+
+Success Response
+
+{
+"success": true,
+"message": "Login successful",
+"token": "JWT_TOKEN",
+"user": {
+"id": "USER_ID",
+"name": "Adarsh",
+"email": "[adarsh@gmail.com](mailto:adarsh@gmail.com)",
+"phoneNumber": "9876543210",
+"verified": true,
+"isAdmin": false
+}
+}
+
+---
+
+5. Admin Login
+
+POST /login
+
+Body
+
+{
+"phoneNumber": "9876543210",
+"password": "12345678",
+"adminPassKey": "ADMIN_SECRET_KEY"
+}
+
+Success Response
+
+{
+"success": true,
+"message": "Login successful",
+"token": "JWT_TOKEN",
+"user": {
+"isAdmin": true
+}
+}
+
+---
+
+Validation Rules
+
+Email: Valid email format
+
+Phone Number: 10 digit Indian number
+
+Password: Minimum 6 characters
+
+OTP: 6 digits
+
+---
+
+User Flow
+
+Signup → Receive OTP → Verify OTP → Login
+
+Admin Login
+
+Login + Correct Admin Pass Key → isAdmin = true
+
+
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
+========================================
+TRAFFIC MANAGEMENT API DOCUMENTATION
+========================================
+
+Base URL:
+http://localhost:5000/api/traffic
+
+----------------------------------------
+1. CREATE SIGNAL
+----------------------------------------
+
+Method:
+POST /create
+
+Request Body:
+
+{
+  "signalNumber": "SIG001",
+  "roadName": "NH24",
+  "latitude": 28.6139,
+  "longitude": 77.2090,
+  "cameraNumber": "CAM001",
+  "roadWidth": 20,
+  "currentVehicleCount": 45,
+  "currentRedLightTime": 40,
+  "currentGreenLightTime": 30,
+  "vehicleDensity": 0.65,
+  "congestionLevel": "MEDIUM"
+}
+
+Response:
+
+{
+  "success": true,
+  "data": { ...signalData }
+}
+
+----------------------------------------
+2. UPDATE TRAFFIC DATA
+----------------------------------------
+
+Method:
+PUT /update/:signalNumber
+
+Example:
+PUT /update/SIG001
+
+Request Body:
+
+{
+  "currentVehicleCount": 60,
+  "currentRedLightTime": 55,
+  "currentGreenLightTime": 45,
+  "vehicleDensity": 0.82,
+  "congestionLevel": "HIGH"
+}
+
+Response:
+
+{
+  "success": true,
+  "data": { ...updatedSignalData }
+}
+
+Note:
+Previous values are automatically moved to:
+- lastVehicleCount
+- lastRedLightTime
+- lastGreenLightTime
+
+----------------------------------------
+3. GET SIGNALS BY ROAD NAME
+----------------------------------------
+
+Method:
+GET /road/:roadName
+
+Example:
+GET /road/NH24
+
+Response:
+
+{
+  "success": true,
+  "count": 2,
+  "data": [ ...signals ]
+}
+
+----------------------------------------
+4. HEALTH CHECK
+----------------------------------------
+
+Method:
+GET /health
+
+Response:
+
+{
+  "success": true,
+  "message": "server is running properly"
+}
+
+========================================
+CONGESTION LEVEL VALUES
+========================================
+
+LOW
+MEDIUM
+HIGH
+
+================================================================================
+================================================================================
+
+
+========================================
+POTHOLE MANAGEMENT API DOCUMENTATION
+====================================
+
+Base URL:
+http://localhost:5000/api/potholes
+
+---
+
+1. CREATE POTHOLE
+
+---
+
+Method:
+POST /create
+
+Body Type:
+form-data
+
+Fields:
+
+potholeId      (Text)
+signalNumber   (Text)
+roadName       (Text)
+latitude       (Text)
+longitude      (Text)
+potholeType    (CRITICAL | MID | MINOR)
+image          (File)
+
+Response:
+
+{
+"success": true,
+"data": {
+"potholeId": "PH001",
+"signalNumber": "SIG001",
+"roadName": "NH24",
+"imageUrl": "cloudinary_url"
+}
+}
+
+---
+
+2. GET ALL POTHOLES
+
+---
+
+Method:
+GET /
+
+Response:
+
+{
+"success": true,
+"count": 1,
+"data": [ ... ]
+}
+
+---
+
+3. GET SINGLE POTHOLE
+
+---
+
+Method:
+GET /:potholeId
+
+Example:
+GET /PH001
+
+Response:
+
+{
+"success": true,
+"data": { ... }
+}
+
+---
+
+4. GET POTHOLES BY ROAD
+
+---
+
+Method:
+GET /road/:roadName
+
+Example:
+GET /road/NH24
+
+Response:
+
+{
+"success": true,
+"count": 1,
+"data": [ ... ]
+}
+
+---
+
+5. GET POTHOLES BY SIGNAL
+
+---
+
+Method:
+GET /signal/:signalNumber
+
+Example:
+GET /signal/SIG001
+
+Response:
+
+{
+"success": true,
+"count": 1,
+"data": [ ... ]
+}
+
+---
+
+6. DISPATCH POTHOLE
+
+---
+
+Method:
+PUT /dispatch/:potholeId
+
+Example:
+PUT /dispatch/PH001
+
+Request Body:
+
+{
+"dispatchNote": "Repair team assigned",
+"userId": "USER_ID"
+}
+
+Response:
+
+{
+"success": true,
+"message": "Pothole dispatched"
+}
+
+---
+
+7. RESOLVE POTHOLE
+
+---
+
+Method:
+PUT /resolve/:potholeId
+
+Example:
+PUT /resolve/PH001
+
+Request Body:
+
+{}
+
+Response:
+
+{
+"success": true,
+"message": "Pothole resolved"
+}
+
+---
+
+## POTHOLE TYPES
+
+CRITICAL
+MID
+MINOR
+
+---
+
+## STATUS FIELDS
+
+resolved:
+true / false
+
+dispatched:
+true / false
+
+---
+
+## IMPORTANT FIELDS
+
+potholeId      Unique pothole identifier
+signalNumber   Traffic signal number
+roadName       Road name
+latitude       Latitude location
+longitude      Longitude location
+imageUrl       Cloudinary image URL
+dispatchNote   Repair/dispatch note
+dispatchedBy   User ID of dispatcher
+
+========================================
+END OF DOCUMENT
+===============
+
+
+
+
+# Complaint Management API Documentation
+
+Base URL
+
+http://localhost:8080/api/complaints
+
+---
+
+1. Add Complaint
+
+Endpoint:
+POST /add
+
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+
+Body (form-data):
+
+category       (Text)
+description    (Text)
+location       (Text)
+images         (File, Optional)
+
+Example:
+
+category: Potholes
+description: Large pothole causing traffic congestion near metro station
+location: Sector 62 Metro Station, Noida
+images: pothole.jpg
+
+Success Response:
+
+{
+"success": true,
+"message": "Complaint added successfully",
+"complaint": {
+"_id": "complaintId",
+"category": "Potholes",
+"status": "Pending"
+}
+}
+
+---
+
+2. Get All Complaints
+
+Endpoint:
+GET /all
+
+Headers:
+None
+
+Success Response:
+
+{
+"success": true,
+"count": 2,
+"complaints": [...]
+}
+
+---
+
+3. Get My Complaints
+
+Endpoint:
+GET /user/my-complaints
+
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+
+Success Response:
+
+{
+"success": true,
+"complaints": [...]
+}
+
+---
+
+4. Get Single Complaint
+
+Endpoint:
+GET /:id
+
+Example:
+
+GET /6a2e50a30bac3605f8b006f1
+
+Success Response:
+
+{
+"success": true,
+"complaint": {
+"_id": "6a2e50a30bac3605f8b006f1",
+"category": "Potholes",
+"description": "...",
+"location": "...",
+"status": "Pending"
+}
+}
+
+---
+
+5. Upvote Complaint
+
+Endpoint:
+POST /upvote/:id
+
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+
+Success Response:
+
+{
+"success": true,
+"message": "Upvote added",
+"upvotes": 1
+}
+
+Error Response:
+
+{
+"success": false,
+"message": "Already upvoted"
+}
+
+---
+
+6. Remove Upvote
+
+Endpoint:
+POST /remove-upvote/:id
+
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+
+Success Response:
+
+{
+"success": true,
+"message": "Upvote removed",
+"upvotes": 0
+}
+
+---
+
+7. Mark Complaint In Progress
+
+Endpoint:
+PUT /in-progress/:id
+
+Headers:
+Authorization: Bearer <ADMIN_TOKEN>
+
+Success Response:
+
+{
+"success": true,
+"message": "Complaint marked as In Progress"
+}
+
+---
+
+8. Resolve Complaint
+
+Endpoint:
+PUT /resolve/:id
+
+Headers:
+Authorization: Bearer <ADMIN_TOKEN>
+
+Body (raw JSON):
+
+{
+"comment": "Road repaired successfully"
+}
+
+Success Response:
+
+{
+"success": true,
+"message": "Complaint resolved successfully"
+}
+
+---
+
+9. Delete Complaint
+
+Endpoint:
+DELETE /:id
+
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+
+Success Response:
+
+{
+"success": true,
+"message": "Complaint deleted successfully"
+}
+
+---
+
+Complaint Status Values
+
+Pending
+In Progress
+Resolved
+
+---
+
+Complaint Categories
+
+Traffic Jam
+Potholes
+Water Logging
+Broken Signals
+Encroachment
+Others
+
+---
+
+Common Error Responses
+
+401 Unauthorized
+
+{
+"success": false,
+"message": "Invalid token"
+}
+
+403 Forbidden
+
+{
+"success": false,
+"message": "Not authorized"
+}
+
+404 Not Found
+
+{
+"success": false,
+"message": "Complaint not found"
+}
+
+500 Internal Server Error
+
+{
+"success": false,
+"message": "Server error"
+}
+
+
+==================================================================================
+====================================================================================
+
+
+# Parking APIs
+
+## 1. Create Parking
+
+POST /api/parking/add
+
+Input (form-data)
+
+name: "Connaught Place Parking"
+description: "Secure parking with CCTV"
+location: "Connaught Place"
+landmark: "Rajiv Chowk Metro"
+totalSlots: 100
+availableSlots: 75
+slotPrice: 50
+images: [file]
+
+Output
+
+{
+"success": true,
+"message": "Parking created successfully",
+"parking": {...}
+}
+
+---
+
+## 2. Get All Parking
+
+GET /api/parking/all
+
+Input
+
+No Body Required
+
+Output
+
+{
+"success": true,
+"count": 5,
+"parkings": [...]
+}
+
+---
+
+## 3. Get My Parking
+
+GET /api/parking/my-parking
+
+Input
+
+Authorization: Bearer <token>
+
+Output
+
+{
+"success": true,
+"parkings": [...]
+}
+
+---
+
+## 4. Get Single Parking
+
+GET /api/parking/:id
+
+Input
+
+Parking ID in URL
+
+Output
+
+{
+"success": true,
+"parking": {...}
+}
+
+---
+
+## 5. Update Parking
+
+PUT /api/parking/update/:id
+
+Input
+
+{
+"name": "CP Parking",
+"description": "Updated Description",
+"location": "New Location",
+"landmark": "New Landmark",
+"totalSlots": 120,
+"availableSlots": 90,
+"slotPrice": 60
+}
+
+Output
+
+{
+"success": true,
+"message": "Parking updated successfully",
+"parking": {...}
+}
+
+---
+
+## 6. Update Available Slots
+
+PUT /api/parking/update-slots/:id
+
+Input
+
+{
+"availableSlots": 60
+}
+
+Output
+
+{
+"success": true,
+"message": "Available slots updated",
+"parking": {...}
+}
+
+---
+
+## 7. Update Images
+
+PUT /api/parking/update-images/:id
+
+Input (form-data)
+
+images: [file]
+
+Output
+
+{
+"success": true,
+"message": "Images updated successfully",
+"parking": {...}
+}
+
+---
+
+## 8. Delete Parking
+
+DELETE /api/parking/:id
+
+Input
+
+Parking ID in URL
+
+Output
+
+{
+"success": true,
+"message": "Parking deleted successfully"
+}
+
+
+
+=============================================================================
+=============================================================================
+
+
+# Parking Booking API Documentation
+
+Base URL
+
+http://localhost:8080/api/parking-Booking
+
+Authorization
+
+Authorization: Bearer <token>
+
+---
+
+## 1. Book Parking
+
+POST
+
+http://localhost:8080/api/parking-Booking/book
+
+Input
+
+```json
+{
+  "parkingId": "6850b8d64a123456789abcd1",
+  "vehicleNumber": "DL01AB1234",
+  "bookingDate": "2026-06-14",
+  "startTime": "10:00 AM",
+  "endTime": "12:00 PM"
+}
+```
+
+Output
+
+```json
+{
+  "success": true,
+  "message": "Parking booked successfully",
+  "booking": {}
+}
+```
+
+---
+
+## 2. Get My Bookings
+
+GET
+
+http://localhost:8080/api/parking-Booking/my-bookings
+
+Input
+
+No Body Required
+
+Output
+
+```json
+{
+  "success": true,
+  "bookings": []
+}
+```
+
+---
+
+## 3. Get Single Booking
+
+GET
+
+http://localhost:8080/api/parking-Booking/:id
+
+Input
+
+Booking ID in URL
+
+Output
+
+```json
+{
+  "success": true,
+  "booking": {}
+}
+```
+
+---
+
+## 4. Update Booking Time
+
+PUT
+
+http://localhost:8080/api/parking-Booking/update-time/:id
+
+Input
+
+```json
+{
+  "startTime": "02:00 PM",
+  "endTime": "05:00 PM"
+}
+```
+
+Output
+
+```json
+{
+  "success": true,
+  "message": "Booking updated",
+  "booking": {}
+}
+```
+
+---
+
+## 5. Cancel Booking
+
+PUT
+
+http://localhost:8080/api/parking-Booking/cancel/:id
+
+Input
+
+No Body Required
+
+Output
+
+```json
+{
+  "success": true,
+  "message": "Booking cancelled successfully"
+}
+```
+
+---
+
+## 6. Delete Booking
+
+DELETE
+
+http://localhost:8080/api/parking-Booking/:id
+
+Input
+
+No Body Required
+
+Output
+
+```json
+{
+  "success": true,
+  "message": "Booking deleted"
+}
+```
+
+---
+
+## Booking Model Fields
+
+```text
+userId
+parkingId
+userName
+email
+contactNumber
+vehicleNumber
+bookingDate
+startTime
+endTime
+bookingAmount
+isPaid
+paymentId
+bookingStatus
+createdAt
+updatedAt
+```
+

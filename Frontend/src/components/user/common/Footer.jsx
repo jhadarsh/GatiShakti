@@ -8,122 +8,134 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="relative w-full overflow-hidden bg-[#08101e] text-white">
+    <footer className="relative overflow-hidden bg-section text-text-primary">
 
-      {/* 🔥 Grid Background (same as hero) */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)
-          `,
-          backgroundSize: "56px 56px",
-        }}
-      />
+      {/* Decorative Background */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(60,12,4,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(60,12,4,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
 
-      {/* 🔥 Glow Effects */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(circle at 20% 20%, rgba(34,211,238,0.12), transparent 40%),
-            radial-gradient(circle at 80% 70%, rgba(245,158,11,0.10), transparent 40%)
-          `,
-        }}
-      />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16">
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-12">
 
-        {/* About */}
-        <div>
-          <h3 className="text-2xl font-bold mb-4 text-white">
-            GatiShakti
-          </h3>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Accelerating smarter journeys with intelligent traffic management
-            and seamless transport solutions for a faster, greener future.
-          </p>
-        </div>
+          {/* Brand */}
+          <div>
+            <h3 className="font-script text-6xl text-text-primary leading-none">
+              Gati
+            </h3>
 
-        {/* Links */}
-        <div>
-          <h3 className="text-2xl font-bold mb-4 text-white">
-            Quick Links
-          </h3>
-          <ul className="space-y-2 text-sm text-slate-400">
-            <li>
-              <a href="#" className="hover:text-cyan-400 transition">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-cyan-400 transition">
-                Plan Your Trip
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-cyan-400 transition">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-cyan-400 transition">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
+            <h4 className="font-sans uppercase tracking-[0.15em] text-lg text-text-primary">
+              Shakti
+            </h4>
 
-        {/* Contact */}
-        <div>
-          <h3 className="text-2xl font-bold mb-4 text-white">
-            Get in Touch
-          </h3>
-          <p className="text-sm text-slate-400">📍 New Delhi, India</p>
-          <p className="text-sm text-slate-400">📧 info@gatishakti.com</p>
-          <p className="text-sm text-slate-400">📞 +91 98765 43210</p>
-
-          {/* Socials */}
-          <div className="flex gap-4 mt-5">
-            {[FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn].map(
-              (Icon, i) => (
-                <div
-                  key={i}
-                  className="p-2 rounded-full cursor-pointer"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    backdropFilter: "blur(6px)",
-                    transition: "all 0.3s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.15)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 20px rgba(34,211,238,0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <Icon className="text-slate-300" />
-                </div>
-              )
-            )}
+            <p className="mt-4 text-text-secondary leading-relaxed">
+              Empowering smarter cities through intelligent traffic
+              monitoring, adaptive signal control, and seamless mobility
+              solutions.
+            </p>
           </div>
+
+          {/* Links */}
+          <div>
+            <h3 className="text-xl font-semibold text-text-primary mb-5">
+              Quick Links
+            </h3>
+
+            <ul className="space-y-3 text-text-secondary">
+              <li>
+                <a
+                  href="#"
+                  className="hover:text-primary transition-colors"
+                >
+                  Home
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#"
+                  className="hover:text-primary transition-colors"
+                >
+                  Plan Journey
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#"
+                  className="hover:text-primary transition-colors"
+                >
+                  Complaint Portal
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#"
+                  className="hover:text-primary transition-colors"
+                >
+                  About Us
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-xl font-semibold text-text-primary mb-5">
+              Contact
+            </h3>
+
+            <div className="space-y-2 text-text-secondary">
+              <p>📍 New Delhi, India</p>
+              <p>📧 support@gatishakti.in</p>
+              <p>📞 +91 98765 43210</p>
+            </div>
+
+            {/* Social Icons */}
+            <div className="flex gap-4 mt-6">
+              {[FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn].map(
+                (Icon, index) => (
+                  <button
+                    key={index}
+                    className="
+                      w-10 h-10
+                      rounded-full
+                      flex items-center justify-center
+                      bg-surface
+                      border border-border
+                      text-text-secondary
+                      hover:bg-primary
+                      hover:text-white
+                      hover:border-primary
+                      transition-all duration-300
+                    "
+                  >
+                    <Icon />
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div
-        className="relative z-10 text-center text-sm text-slate-500 py-6"
-        style={{
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        © {new Date().getFullYear()} GatiShakti. All rights reserved.
+      <div className="border-t border-border">
+        <div className="max-w-7xl mx-auto px-6 py-5 text-center text-sm text-text-muted">
+          © {new Date().getFullYear()} GatiShakti. Building smarter roads for smarter cities.
+        </div>
       </div>
     </footer>
   );

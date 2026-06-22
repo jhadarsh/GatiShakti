@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "mock_001",
+    "name": "Connaught Place Parking",
+    "description": "Covered multi-level parking in the heart of CP. 24/7 security, CCTV surveillance, and EV charging points available.",
+    "location": "Block A, Connaught Place, New Delhi",
+    "landmark": "Palika Bazaar",
+    "slotPrice": 40,
+    "availableSlots": 6,
+    "totalSlots": 20,
+    "images": []
+  },
+  {
+    "_id": "mock_002",
+    "name": "Lajpat Nagar Central Park",
+    "description": "Open-air parking lot adjacent to the Central Market. Well-lit at night with attendant on duty.",
+    "location": "Central Market, Lajpat Nagar IV, New Delhi",
+    "landmark": "Metro Gate No. 2",
+    "slotPrice": 20,
+    "availableSlots": 3,
+    "totalSlots": 12,
+    "images": []
+  }
+]
