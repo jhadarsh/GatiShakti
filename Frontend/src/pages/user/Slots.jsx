@@ -3,10 +3,10 @@ import { useAuth } from "../../context/AuthContext";
 import { Search, X, Loader2 } from "lucide-react";
 
 import ParkingCard from "../../components/user/Slots/Parkingcard";
-import ParkingInfoModal from "../../components/user/Slots/ParkingInfoModal";
-import DateTimeModal from "../../components/user/Slots/DateTimeModal";
-import SeatMapModal from "../../components/user/Slots/SeatMapModal";
-import VehicleModal from "../../components/user/Slots/VehicleModal";
+import ParkingInfoModal from "../../components/user/Slots/Parkinginfomodal";
+import DateTimeModal from "../../components/user/Slots/Datetimemodal";
+import SeatMapModal from "../../components/user/Slots/Seatmapmodal";
+import VehicleModal from "../../components/user/Slots/Vehiclemodal";
 import MOCK_PARKINGS from "../../Data/Mockparkings.json";
 
 
