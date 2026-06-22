@@ -1,136 +1,77 @@
 const nodemailer = require("nodemailer");
 const path       = require("path");
+const fs         = require("fs");
 
 const otpTemplate     = require("./otpTemplate");
 const welcomeTemplate = require("./welcomeTemplate");
 const parkingTemplate = require("./parkingTemplate");
 const { generateBookingQR } = require("./qrGenerator");
 
-// ── debug ─────────────────────────────────────────────────────────
+// ── preload assets as base64 once at startup ──────────────────────
+const assetsDir = path.join(__dirname, "assets");
+
+const logoBase64          = fs.readFileSync(path.join(assetsDir, "logo.png")).toString("base64");
+const otpBannerBase64     = fs.readFileSync(path.join(assetsDir, "otp-banner.png")).toString("base64");
+const welcomeBannerBase64 = fs.readFileSync(path.join(assetsDir, "welcome-banner.png")).toString("base64");
+const parkingBannerBase64 = fs.readFileSync(path.join(assetsDir, "parking-banner.png")).toString("base64");
+
 console.log("=== EMAIL SERVICE LOADED ===");
 console.log("EMAIL_USER:", process.env.EMAIL_USER || "NOT SET");
 console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? `Loaded (length: ${process.env.EMAIL_PASS.length})` : "NOT SET");
+console.log("Assets loaded — logo, otp-banner, welcome-banner, parking-banner ✓");
 
 // ── transporter ───────────────────────────────────────────────────
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host:   "smtp.gmail.com",
+  port:   587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  family: 4,
 });
 
 transporter.verify((err) => {
   if (err) {
     console.error("=== TRANSPORT VERIFY FAILED ===");
-    console.error("Error Code:", err.code);
-    console.error("Error Message:", err.message);
-    console.error("Full Error:", err);
+    console.error("Code:", err.code, "| Message:", err.message);
   } else {
     console.log("=== MAIL SERVER READY ✓ ===");
   }
 });
 
-// ── inline attachment helper ──────────────────────────────────────
-const getAttachments = (banner) => {
-  const logoPath   = path.join(__dirname, "assets", "logo.png");
-  const bannerPath = path.join(__dirname, "assets", banner);
-
-  console.log("Attachment paths:");
-  console.log("  logo  →", logoPath);
-  console.log("  banner →", bannerPath);
-
-  // Check if files actually exist
-  const fs = require("fs");
-  console.log("  logo exists?  ", fs.existsSync(logoPath));
-  console.log("  banner exists?", fs.existsSync(bannerPath));
-
-  return [
-    {
-      filename:           "logo.png",
-      path:               logoPath,
-      cid:                "logo",
-      contentType:        "image/png",
-      contentDisposition: "inline",
-    },
-    {
-      filename:           banner,
-      path:               bannerPath,
-      cid:                "banner",
-      contentType:        "image/png",
-      contentDisposition: "inline",
-    },
-  ];
-};
-
 // ── OTP email ─────────────────────────────────────────────────────
 const sendOTPEmail = async (email, name, otp) => {
-  console.log("=== sendOTPEmail CALLED ===");
-  console.log("  To     :", email);
-  console.log("  Name   :", name);
-  console.log("  OTP    :", otp);
-
+  console.log("=== sendOTPEmail CALLED ===", { email, name, otp });
   try {
-    console.log("  Building OTP template...");
-    const html = otpTemplate(name, otp);
-    console.log("  Template built, length:", html?.length);
-
-    console.log("  Getting attachments...");
-    const attachments = getAttachments("otp-banner.png");
-
-    console.log("  Calling transporter.sendMail...");
     const info = await transporter.sendMail({
-      from:        process.env.EMAIL_USER,
-      to:          email,
-      subject:     "Verify Email | GatiShakti",
-      html,
-      attachments,
+      from:    process.env.EMAIL_USER,
+      to:      email,
+      subject: "Verify Email | GatiShakti",
+      html:    otpTemplate(name, otp, logoBase64, otpBannerBase64),
     });
-
-    console.log("=== OTP EMAIL SENT ✓ ===");
-    console.log("  messageId:", info.messageId);
-    console.log("  response :", info.response);
+    console.log("=== OTP EMAIL SENT ✓ ===", info.messageId);
     return info;
   } catch (error) {
-    console.error("=== OTP EMAIL FAILED ===");
-    console.error("  Code   :", error.code);
-    console.error("  Message:", error.message);
-    console.error("  Full   :", error);
+    console.error("=== OTP EMAIL FAILED ===", error.code, error.message);
   }
 };
 
 // ── welcome email ─────────────────────────────────────────────────
 const sendWelcomeEmail = async (email, name) => {
-  console.log("=== sendWelcomeEmail CALLED ===");
-  console.log("  To  :", email);
-  console.log("  Name:", name);
-
+  console.log("=== sendWelcomeEmail CALLED ===", { email, name });
   try {
-    console.log("  Building welcome template...");
-    const html = welcomeTemplate(name);
-    console.log("  Template built, length:", html?.length);
-
-    console.log("  Getting attachments...");
-    const attachments = getAttachments("welcome-banner.png");
-
-    console.log("  Calling transporter.sendMail...");
     const info = await transporter.sendMail({
-      from:        process.env.EMAIL_USER,
-      to:          email,
-      subject:     "Welcome To GatiShakti 🎉",
-      html,
-      attachments,
+      from:    process.env.EMAIL_USER,
+      to:      email,
+      subject: "Welcome To GatiShakti 🎉",
+      html:    welcomeTemplate(name, logoBase64, welcomeBannerBase64),
     });
-
-    console.log("=== WELCOME EMAIL SENT ✓ ===");
-    console.log("  messageId:", info.messageId);
-    console.log("  response :", info.response);
+    console.log("=== WELCOME EMAIL SENT ✓ ===", info.messageId);
     return info;
   } catch (error) {
-    console.error("=== WELCOME EMAIL FAILED ===");
-    console.error("  Code   :", error.code);
-    console.error("  Message:", error.message);
-    console.error("  Full   :", error);
+    console.error("=== WELCOME EMAIL FAILED ===", error.code, error.message);
   }
 };
 
@@ -138,62 +79,23 @@ const sendWelcomeEmail = async (email, name) => {
 const sendParkingBookingEmail = async (
   email, name, parkingName, vehicleNumber, bookingDate, startTime, endTime
 ) => {
-  console.log("=== sendParkingBookingEmail CALLED ===");
-  console.log("  To            :", email);
-  console.log("  Name          :", name);
-  console.log("  Parking       :", parkingName);
-  console.log("  Vehicle       :", vehicleNumber);
-  console.log("  Date          :", bookingDate);
-  console.log("  Start → End   :", startTime, "→", endTime);
-
+  console.log("=== sendParkingBookingEmail CALLED ===", { email, name, parkingName });
   try {
-    console.log("  Generating QR code...");
-    const qrBuffer = await generateBookingQR({
-      name, parkingName, vehicleNumber, bookingDate, startTime, endTime,
-    });
-    console.log("  QR generated, buffer size:", qrBuffer?.length, "bytes");
+    const qrBuffer  = await generateBookingQR({ name, parkingName, vehicleNumber, bookingDate, startTime, endTime });
+    const qrBase64  = qrBuffer.toString("base64");
+    console.log("QR generated, size:", qrBuffer.length, "bytes ✓");
 
-    console.log("  Building parking template...");
-    const html = parkingTemplate(
-      name, parkingName, vehicleNumber,
-      bookingDate, startTime, endTime,
-      "cid:qrcode"
-    );
-    console.log("  Template built, length:", html?.length);
-
-    console.log("  Getting attachments...");
-    const attachments = [
-      ...getAttachments("parking-banner.png"),
-      {
-        filename:           "qrcode.png",
-        content:            qrBuffer,
-        contentType:        "image/png",
-        cid:                "qrcode",
-        contentDisposition: "inline",
-      },
-    ];
-    console.log("  Total attachments:", attachments.length);
-
-    console.log("  Calling transporter.sendMail...");
     const info = await transporter.sendMail({
       from:    process.env.EMAIL_USER,
       to:      email,
       subject: "Parking Booking Confirmed | GatiShakti",
-      html,
-      attachments,
+      html:    parkingTemplate(name, parkingName, vehicleNumber, bookingDate, startTime, endTime, logoBase64, parkingBannerBase64, qrBase64),
     });
-
-    console.log("=== PARKING EMAIL SENT ✓ ===");
-    console.log("  messageId:", info.messageId);
-    console.log("  response :", info.response);
+    console.log("=== PARKING EMAIL SENT ✓ ===", info.messageId);
     return info;
   } catch (error) {
-    console.error("=== PARKING EMAIL FAILED ===");
-    console.error("  Code   :", error.code);
-    console.error("  Message:", error.message);
-    console.error("  Full   :", error);
+    console.error("=== PARKING EMAIL FAILED ===", error.code, error.message);
   }
 };
 
-// ── exports ───────────────────────────────────────────────────────
 module.exports = { sendOTPEmail, sendWelcomeEmail, sendParkingBookingEmail };
