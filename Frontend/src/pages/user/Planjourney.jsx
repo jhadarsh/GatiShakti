@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import JourneyInput    from "../../components/user/planjourney/Journeyinput";
-import RouteMap        from "../../components/user/planjourney/RouteMap";
-import RouteCard       from "../../components/user/planjourney/RouteCard";
-import RouteSummaryBar from "../../components/user/planjourney/RouteSummaryBar";
+import RouteMap        from "../../components/user/planjourney/Routemap";
+import RouteCard       from "../../components/user/planjourney/Routecard";
+import RouteSummaryBar from "../../components/user/planjourney/Routesummarybar";
 import MOCK_ROUTES     from "../../Data/Mockroutes.json";
 
 // OSRM public demo server — replace with self-hosted for production
