@@ -1,6 +1,6 @@
 # Dependencies
-frontend/node_modules/
-backend/node_modules/
+Frontend/node_modules/
+Backend/node_modules/
 models/node_modules/
 
 # Environment files
