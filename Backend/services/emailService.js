@@ -22,14 +22,13 @@ console.log("Assets loaded — logo, otp-banner, welcome-banner, parking-banner 
 
 // ── transporter ───────────────────────────────────────────────────
 const transporter = nodemailer.createTransport({
-  host:   "smtp.gmail.com",
+  host:   "smtp-relay.brevo.com",
   port:   587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
   },
-  family: 4,
 });
 
 transporter.verify((err) => {
