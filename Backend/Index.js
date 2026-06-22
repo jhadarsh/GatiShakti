@@ -51,7 +51,7 @@ app.get("/health" , (req , res) => {
 cron.schedule("*/15 * * * *", async () => {
   try {
     const response = await axios.get(
-      "https://your-app-name.onrender.com/health"
+      "https://gatishakti-backend.onrender.com/health"
     );
 
     console.log(

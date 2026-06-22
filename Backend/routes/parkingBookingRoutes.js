@@ -85,7 +85,7 @@ router.post(
         startTime,
         endTime
       );
-
+      console.log("email send for parking confirmation for " , user._id ,user.email , user.name );
       res.status(201).json({
         success: true,
         message:
