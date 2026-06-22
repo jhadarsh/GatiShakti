@@ -1,4 +1,4 @@
-// src/components/dashboard.jsx
+// src/components/Dashboard.jsx
 import React from "react";
 import {
   Box,
