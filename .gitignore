@@ -5,7 +5,7 @@ models/node_modules/
 
 # Environment files
 frontend/.env
-backend/.env
+Backend/.env
 models/.env
 
 # Python virtual environments
