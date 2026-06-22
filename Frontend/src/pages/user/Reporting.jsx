@@ -3,9 +3,9 @@ import { Plus, X, Loader2, AlertCircle, WifiOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 import ComplaintCard from "../../components/user/complaints/Complaintcard";
-import PostComplaintModal from "../../components/user/complaints/PostComplaintModal";
-import StatsBar from "../../components/user/complaints/StatsBar";
-import FilterBar from "../../components/user/complaints/FilterBar";
+import PostComplaintModal from "../../components/user/complaints/Postcomplaintmodal";
+import StatsBar from "../../components/user/complaints/Statsbar";
+import FilterBar from "../../components/user/complaints/Filterbar";
 import mockData from "../../Data/Mockcomplaints.json";
 
 /* ─── Constants (merged from constants.js) ────────── */
